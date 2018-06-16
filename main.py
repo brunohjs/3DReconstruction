@@ -1,7 +1,8 @@
-import cv2
+
 import numpy as np
 import pylab as plb
 import sys
+from math import degrees,atan2
 
 'Classe que representa um bin do sonar MSIS'
 class Bin:
@@ -21,7 +22,7 @@ class Bin:
     def convertRaw(self, raw):
         new_raw = list()
         for i in range(len(raw)):
-            new_raw.append(float(self.raw[i]))
+            new_raw.append(float(raw[i]))
         return new_raw
 
 
@@ -43,6 +44,20 @@ def showImg(bins):
     im = plb.imshow(img)
     #plb.colorbar(im, orientation='horizontal')
     plb.show()
+
+'Função que converte os ângulos de quaternion para graus'
+def quaternion2EulerAngle(w, x, y, z):
+	t0 = 2 * (w * x + y * z)
+	t1 = 1 - 2 * (x * x + y**2)
+	X = degrees(atan2(t0, t1))
+	t2 = 2 * (w * y - z * x)
+	t2 = +1 if t2 > +1 else t2
+	t2 = -1 if t2 < -1 else t2
+	Y = degrees(asin(t2))
+	t3 = +2 * (w * z + x * y)
+	t4 = +1 - 2 * (y**2 + z * z)
+	Z = degrees(atan2(t3, t4))
+	return X, Y, Z
 
 'Função principal'
 def main():

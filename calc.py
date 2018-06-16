@@ -1,5 +1,9 @@
 import math
 
+'Distância euclidiana entre dois pontos'
+def distance(p1, p2):
+	return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
+
 'Conversão de coordenadas cartesianas para polares'
 def cartesian2Polar(x, y):
     rho = math.sqrt(x**2 + y**2)

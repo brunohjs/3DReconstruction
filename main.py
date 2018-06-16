@@ -1,16 +1,8 @@
-from convert import *
+from calc import *
 from Beam import Beam
 import numpy as np
 import pylab as plb
 import sys
-
-
-'Função que faz um pré-processamento do vetor de beams'
-def convertRaw(raw):
-    bins = list()
-    for i in range(len(raw)):
-        bins.append(float(raw[i]))
-    return bins
 
 'Função que pega os dados do dataset e passa para uma lista'
 def getDataset(file, num_bins):
@@ -40,7 +32,6 @@ def showImg(beams, type_='normal'):
     elif type_ == 'higher_plot':
         for beam in beams:
             img.append(beam.bins.index(beam.higher))
-            print(polar2Cartesian())
     
     #img = np.asarray([1,2,3,4])
     plb.plot(img, 'o')
@@ -56,7 +47,6 @@ def showImg(beams, type_='normal'):
 def main():
     beams = getDataset(sys.argv[1], 150)
     showImg(beams, 'higher_plot')
-
 
 if __name__ == '__main__':
     main()

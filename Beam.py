@@ -1,4 +1,6 @@
+from calc import *
 
+BEAM_HEIGHT = 30
 
 'Classe que representa um bin do sonar MSIS'
 class Beam:
@@ -24,7 +26,20 @@ class Beam:
             self.orientation_w)
         
         self.bins = convertRaw(list(line[9:-1]))
-        self.higher = max(self.bins)
+        self.bin_height = BEAM_HEIGHT/len(self.bins)
 
-    def getDistance(self):
+        self.higher = max(self.bins)
+        
+        (self.higher_x,
+        self.higher_y) = polar2Cartesian(
+            self.bins.index(self.higher)*self.bin_height, 
+            self.angle_head)
+
+
+'Função que faz um pré-processamento do vetor de beams'
+def convertRaw(raw):
+    bins = list()
+    for i in range(len(raw)):
+        bins.append(float(raw[i]))
+    return bins
         

@@ -12,8 +12,8 @@ def polar2Cartesian(rho, phi):
     y = rho * math.sin(phi)
     return (x, y)
 
-'Conversão de ângulos em quaternions para Euler'
-def quaternions2EulerAngle(x, y, z, w):
+'Conversão de ângulos em quaternion para Euler'
+def quaternion2Euler(x, y, z, w):
 	t0 = 2 * (w * x + y * z)
 	t1 = 1 - 2 * (x * x + y**2)
 	X = math.atan2(t0, t1)

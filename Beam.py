@@ -32,7 +32,7 @@ class Beam:
         
         (self.higher_x,
         self.higher_y) = polar2Cartesian(
-            self.bins.index(self.higher)*self.bin_height, 
+            (self.bins.index(self.higher)+1)*self.bin_height, 
             self.angle_head)
 
 

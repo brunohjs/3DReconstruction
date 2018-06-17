@@ -11,42 +11,46 @@ def getDataset(file, num_bins):
     for line in f.readlines()[1:num_bins+1]:
         dataset.append(Beam(line.split(',')))
     f.close()
-    return dataset
+    return dataset[::-1]
 
 'Mostra os beams em uma imagem (coordenadas cartesianas)'
 def showImg(beams, type_='normal'):
     img = list()
+    img_x = list()
+    img_y = list()
     
     if type_ == 'normal':
         for beam in beams:
             img.append(beam.bins)
+        img = np.asarray(img)
+        im = plb.imshow(img)
     elif type_ == 'higher':
         for beam in beams:
             line_img = list()
             for bin_ in beam.bins:
                 if bin_ == beam.higher:
-                    line_img.append(beam.higher)
+                    line_img.append(1)
+                elif bin_ > 0:
+                    line_img.append(0.5)
                 else:
                     line_img.append(0)
             img.append(line_img)
+        img = np.asarray(img)
+        im = plb.imshow(img, cmap='binary')
     elif type_ == 'higher_plot':
         for beam in beams:
-            img.append(beam.bins.index(beam.higher))
+            img_x.append(beam.higher_x)
+            img_y.append(beam.higher_y)
+        plb.plot(img_x, img_y, '.')
+        #plb.axis([5, 30, 30, -30])
     
-    #img = np.asarray([1,2,3,4])
-    plb.plot(img, 'o')
-    #im = plb.imshow(img)
     #plb.colorbar(im, orientation='horizontal')
     plb.show()
-
-    #plt.plot([1, 2, 3, 4])
-    #plt.ylabel('some numbers')
-    #plt.show()
 
 'Função principal'
 def main():
     beams = getDataset(sys.argv[1], 150)
-    showImg(beams, 'higher_plot')
+    showImg(beams, 'normal')
 
 if __name__ == '__main__':
     main()

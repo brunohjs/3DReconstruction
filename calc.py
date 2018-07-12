@@ -11,9 +11,9 @@ def cartesian2Polar(x, y):
     return (rho, phi)
 
 'Conversão de coordenadas polares para cartesianas'
-def polar2Cartesian(rho, phi):
-    x = rho * math.cos(phi)
-    y = rho * math.sin(phi)
+def polar2Cartesian(dist, angle):
+    x = dist * math.cos(angle)
+    y = dist * math.sin(angle)
     return (x, y)
 
 'Conversão de ângulos em quaternion para Euler'

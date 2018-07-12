@@ -1,40 +1,56 @@
-import cv2
+from calc import *
+from Beam import Beam
 import numpy as np
 import pylab as plb
+import sys
 
-file = open('data.txt')
+'Função que pega os dados do dataset e passa para uma lista'
+def getDataset(file, num_bins):
+    dataset = list()
+    f = open(file)
+    for line in f.readlines()[1:num_bins+1]:
+        dataset.append(Beam(line.split(',')))
+    f.close()
+    return dataset[::-1]
 
-class Bin:
-    def __init__(self, line):
-        self.frame = int(line[0])
-        self.angle_head = float(line[1])
-        self.position_x = float(line[2])
-        self.position_y = float(line[3])
-        self.position_z = float(line[4])
-        self.orientation_x = float(line[5])
-        self.orientation_y = float(line[6])
-        self.orientation_z = float(line[7])
-        self.orientation_w = float(line[8])
-        self.raw = list(line[9:-1])
+'Mostra os beams em uma imagem (coordenadas cartesianas)'
+def showImg(beams, type_='normal'):
+    img = list()
+    img_x = list()
+    img_y = list()
+    
+    if type_ == 'normal':
+        for beam in beams:
+            img.append(beam.bins)
+        img = np.asarray(img)
+        im = plb.imshow(img)
+    elif type_ == 'higher':
+        for beam in beams:
+            line_img = list()
+            for bin_ in beam.bins:
+                if bin_ == beam.higher:
+                    line_img.append(1)
+                elif bin_ > 0:
+                    line_img.append(0.5)
+                else:
+                    line_img.append(0)
+            img.append(line_img)
+        img = np.asarray(img)
+        im = plb.imshow(img, cmap='binary')
+    elif type_ == 'higher_plot':
+        for beam in beams:
+            img_x.append(beam.higher_x)
+            img_y.append(beam.higher_y)
+        plb.plot(img_x, img_y, '.')
+        #plb.axis([5, 30, 30, -30])
+    
+    #plb.colorbar(im, orientation='horizontal')
+    plb.show()
 
-        for i in range(len(self.raw)):
-            self.raw[i] = float(self.raw[i])
+'Função principal'
+def main():
+    beams = getDataset(sys.argv[1], 150)
+    showImg(beams, 'normal')
 
-img = list()
-bins = list()
-
-
-for line in file.readlines()[1:151]:
-    bins.append(Bin(line.split(',')))
-    print(line)
-
-file.close()
-
-for bin_line in bins:
-    img.append(bin_line.raw)
-
-img = np.asarray(img)
-
-im = plb.imshow(img)
-#plb.colorbar(im, orientation='horizontal')
-plb.show()
+if __name__ == '__main__':
+    main()

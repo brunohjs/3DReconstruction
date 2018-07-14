@@ -1,8 +1,15 @@
-from math import degrees
 from calc import polar2Cartesian
+
+import os.path
+import os
+import sys
+import plyfile
+
 from mpl_toolkits.mplot3d import Axes3D
 import pylab as plb
 import numpy as np
+
+
 
 global RANGE
 RANGE = 50
@@ -70,10 +77,12 @@ def getHigherBin(dataset):
                 'dist' : (higher_index+1)*len(beam['raw'])/RANGE,
                 'index': higher_index
             }
+        if len(image) > 179:
+            image.remove(image[-1])
     return dataset
 
 'Passa os dados para vetores que serão plotados em 3D'
-def transpose(dataset):
+def transpose(dataset, outliers=2):
     axis_x = list()
     axis_y = list()
     axis_z = list()
@@ -85,40 +94,62 @@ def transpose(dataset):
         axis_c.append(list())
         for beam in image:
             if beam['higher']['dist'] <= 1:
-                x, y = polar2Cartesian(2*RANGE, beam['angle'])
-            else:  
+                if outliers is 1:
+                    x, y = polar2Cartesian(RANGE, beam['angle'])
+                    z = beam['z']
+                elif outliers is 2:
+                    x, y = -1, -1
+                    z = -92
+            else:
                 x, y = polar2Cartesian(beam['higher']['dist'], beam['angle'])
+                z = beam['z']        
             axis_x[-1].append(x)
             axis_y[-1].append(y)
-            axis_z[-1].append(beam['z'])
+            axis_z[-1].append(z)
             axis_c[-1].append(beam['higher']['value'])
     
-    plot3D(axis_x, axis_y, axis_z, axis_c)
+    #plot3D(axis_x, axis_y, axis_z, axis_c)
+    return axis_x, axis_y, axis_z
+
+'Converter a nuvem de pontos em um arquivo .ply'
+def saveFile(x,y,z):
+    points = list()
+    for i in range(len(x)):
+        for j in range(len(x[i])):
+            if x[i][j] != -1 and y[i][j] != -1:
+                vert = (x[i][j], y[i][j], z[i][j])
+                points.append(vert)
+    points = np.array(points, dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4')])
+    point_cloud = plyfile.PlyElement.describe(points, 'vertex')
+    
+    if not os.path.exists("point_clouds/"):
+        os.mkdir("point_clouds/")
+    namefile = "point_clouds/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]
+    plyfile.PlyData([point_cloud], text=True).write(namefile+'.ply')
+
 
 'Plota o gráfico em 3D'
 def plot3D(x, y, z, c):
     fig = plb.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(np.array(x), np.array(y), np.array(z),c=np.array(c), s=15, linewidths=0)
-    ax.set_xlim3d(-60, 60)
-    ax.set_ylim3d(-60, 60)
+    ax.scatter(np.array(x), np.array(y), np.array(z),c=np.array(c), s=20, linewidths=0)
+    #ax.set_xlim3d(-60, 60)
+    #ax.set_ylim3d(-60, 60)
     #ax.set_zlim3d(-96, -50)
     ax.set_xlabel("Eixo X")
     ax.set_ylabel("Eixo Y")
     ax.set_zlabel("Eixo Z")
-    
-    #plb.colorbar()
     plb.show()
-
 
 
 'Função principal'
 def main():
-    dataset = getDataset('datasets/data.txt')
+    dataset = getDataset(sys.argv[1])
     dataset = splitDataset(dataset)
     dataset = ordenizeDataset(dataset)
     dataset = getHigherBin(dataset)
-    transpose(dataset)
+    x,y,z = transpose(dataset)
+    saveFile(x, y, z)
 
 
 if __name__ == '__main__':

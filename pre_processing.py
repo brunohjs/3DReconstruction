@@ -10,7 +10,6 @@ import pylab as plb
 import numpy as np
 
 
-
 global RANGE
 RANGE = 50
 
@@ -154,4 +153,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    

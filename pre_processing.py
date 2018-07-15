@@ -1,4 +1,4 @@
-from calc import polar2Cartesian
+from modules.calc import polar2Cartesian
 
 import os.path
 import os
@@ -106,9 +106,8 @@ def transpose(dataset, outliers=2):
             axis_y[-1].append(y)
             axis_z[-1].append(z)
             axis_c[-1].append(beam['higher']['value'])
-    
-    #plot3D(axis_x, axis_y, axis_z, axis_c)
-    return axis_x, axis_y, axis_z
+
+    return axis_x, axis_y, axis_z, axis_c
 
 'Converter a nuvem de pontos em um arquivo .ply'
 def saveFile(x,y,z):
@@ -139,17 +138,3 @@ def plot3D(x, y, z, c):
     ax.set_ylabel("Eixo Y")
     ax.set_zlabel("Eixo Z")
     plb.show()
-
-
-'Função principal'
-def main():
-    dataset = getDataset(sys.argv[1])
-    dataset = splitDataset(dataset)
-    dataset = ordenizeDataset(dataset)
-    dataset = getHigherBin(dataset)
-    x,y,z = transpose(dataset)
-    saveFile(x, y, z)
-
-
-if __name__ == '__main__':
-    main()

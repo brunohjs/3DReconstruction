@@ -1,8 +1,10 @@
 import math
 
+
 'Distância euclidiana entre dois pontos'
 def distance(p1, p2):
 	return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
+
 
 'Conversão de coordenadas cartesianas para polares'
 def cartesian2Polar(x, y):
@@ -10,11 +12,13 @@ def cartesian2Polar(x, y):
     phi = math.atan2(y, x)
     return (rho, phi)
 
+
 'Conversão de coordenadas polares para cartesianas'
 def polar2Cartesian(dist, angle):
     x = dist * math.cos(angle)
     y = dist * math.sin(angle)
     return (x, y)
+
 
 'Conversão de ângulos em quaternion para Euler'
 def quaternion2Euler(x, y, z, w):

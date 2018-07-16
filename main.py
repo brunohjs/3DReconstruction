@@ -1,4 +1,7 @@
+import sys
 from pre_processing import *
+from filtering import *
+from modules.files import saveFile
 
 def main():
     'Pré-processamento'
@@ -6,13 +9,14 @@ def main():
     dataset = splitDataset(dataset)
     dataset = ordenizeDataset(dataset)
     dataset = getHigherBin(dataset)
-    x,y,z,v = transpose(dataset, 1)
-    plot3D(x, y, z, v)
-    saveFile(x, y, z)
+    point_cloud = generatePointCloud(dataset)
 
     'Filtragem'
-
-
+    point_cloud = removeOutliers(point_cloud)
+    point_cloud = removeNoise(point_cloud)
+    
+    saveFile(point_cloud)
+    
 
 if __name__ == '__main__':
     main()

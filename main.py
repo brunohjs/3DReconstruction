@@ -4,6 +4,7 @@ from filtering import *
 from modules.files import saveFile
 
 def main():
+    
     'Pré-processamento'
     dataset = getDataset(sys.argv[1])
     dataset = splitDataset(dataset)
@@ -15,6 +16,7 @@ def main():
     point_cloud = removeOutliers(point_cloud)
     point_cloud = removeNoise(point_cloud)
     
+    'Salvar em arquivo'
     saveFile(point_cloud)
     
 

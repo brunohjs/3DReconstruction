@@ -1,7 +1,9 @@
 <p align="center">
     <img src="images/c3.jpg" width=150/>
     <img src="images/furg.png" width=100/>
-    <img src="images/nautec.png" width=400/>
+</p>
+<p align="center">
+    <img src="images/nautec.png" width=500/>
 </p>
 
 # 3DReconstruction

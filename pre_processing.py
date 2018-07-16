@@ -85,8 +85,6 @@ def generatePointCloud(dataset):
                 'x'     :   x,
                 'y'     :   y,
                 'z'     :   beam['z'],
-                'angle' :   beam['angle'],
-                'dist'  :   beam['higher']['dist'],
                 'value' :   beam['higher']['value']
             })
     return refined

@@ -1,33 +1,14 @@
-ply
-format ascii 1.0
-comment PCL generated
-element vertex 6623
-property float x
-property float y
-property float z
-element camera 1
-property float view_px
-property float view_py
-property float view_pz
-property float x_axisx
-property float x_axisy
-property float x_axisz
-property float y_axisx
-property float y_axisy
-property float y_axisz
-property float z_axisx
-property float z_axisy
-property float z_axisz
-property float focal
-property float scalex
-property float scaley
-property float centerx
-property float centery
-property int viewportx
-property int viewporty
-property float k1
-property float k2
-end_header
+# .PCD v0.7 - Point Cloud Data file format
+VERSION 0.7
+FIELDS x y z
+SIZE 4 4 4
+TYPE F F F
+COUNT 1 1 1
+WIDTH 6623
+HEIGHT 1
+VIEWPOINT 0 0 0 1 0 0 0
+POINTS 6623
+DATA ascii
 0.01745544 -0.99984765 -64.999901
 0.034899238 -0.99939084 -64.999901
 0.052332409 -0.99862975 -64.999901
@@ -6651,4 +6632,3 @@ end_header
 0.27903849 3.9902554 -92.600998
 0.20932963 3.994519 -92.601196
 0.13959695 3.9975634 -92.601402
-0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 6623 1 0 0

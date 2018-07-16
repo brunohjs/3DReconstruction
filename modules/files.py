@@ -1,25 +1,37 @@
-import plyfile
 import os.path
 import os
 import sys
 import numpy as np
+import pcl
 
-'Converter a nuvem de pontos em um arquivo .ply'
-def saveFile(dataset, filename=None, original=False):
-    points = list()
-    for point in dataset:
-        vert = (point['x'], point['y'], point['z'])
-        points.append(vert)
-    points = np.array(points, dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4')])
-    point_cloud = plyfile.PlyElement.describe(points, 'vertex')
-    
+
+'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
+def saveFile(point_cloud, filename=None, ftype='.ply', original=False):
     if not os.path.exists("outputs/"):
         os.mkdir("outputs/")
     if filename:
-        namefile = "outputs/"+filename
+        path = "outputs/" + filename
     else:
+        splited_name = os.path.splitext(os.path.basename(sys.argv[1]))
         if original:
-            namefile = "outputs/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]+'_original.ply'
+            path = "outputs/" + splited_name[0] + '_original' + ftype
         else:
-            namefile = "outputs/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]+'.ply'
-    plyfile.PlyData([point_cloud], text=True).write(namefile)
+            path = "outputs/" + splited_name[0] + ftype
+
+    if type(point_cloud) is np.ndarray:
+        point_cloud = pcl.PointCloud(point_cloud)
+    elif type(point_cloud) is list:
+        point_cloud = pcl.PointCloud(parseToArray(point_cloud))
+    pcl.save(point_cloud, path)
+
+
+'Converte o dataset para uma nuvem de pontos'
+def parseToArray(dataset):
+    points = list()
+    for point in dataset:
+        points.append([
+            point['x'],
+            point['y'],
+            point['z']
+        ])
+    return np.array(points, dtype=np.float32)

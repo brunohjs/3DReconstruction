@@ -2,24 +2,20 @@ import bpy
 import sys
 import mathutils
 from io_mesh_ply import import_ply
+from io_pcd import *
 import os.path
 
 #comando pra executar o script no blender
 #blender --python ~/Desktop/3DReconstruction/modules/render.py outputs/wall2.py
 
 position = mathutils.Vector((0,0,92))
+objects = list()
 
-if len(sys.argv) == 5:
-    name = os.path.basename(sys.argv[4])[:-4]
-    surface2 = import_ply.load_ply_mesh(sys.argv[4], name)
-    obj2 = bpy.data.objects.new(name, surface2)
-    obj2.location = position
-    bpy.context.scene.objects.link(obj2)
-
-name = os.path.basename(sys.argv[3])[:-4]
-surface1 = import_ply.load_ply_mesh(sys.argv[3], name)
-obj1 = bpy.data.objects.new(name, surface1)
-obj1.location = position
-bpy.context.scene.objects.link(obj1)
+for i in range(3, len(sys.argv)):
+    name = os.path.basename(sys.argv[i])[:-4]
+    surface = import_ply.load_ply_mesh(sys.argv[i], name)
+    objects.append(bpy.data.objects.new(name, surface))
+    objects[-1].location = position
+    bpy.context.scene.objects.link(objects[-1])
 
 bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')

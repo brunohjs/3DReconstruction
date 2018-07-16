@@ -1,9 +1,10 @@
-import numpy as np
 import pcl
+from modules.files import parseToArray
+from modules.calc import distance
 
 
 'Remoção de outliers da nuvem de pontos'
-def removeOutliers(point_cloud, min_val=5, min_dist=5):
+def removeOutliers(point_cloud, min_dist=5, min_val=5):
     new_point_cloud = list()
 
     minimum = float('inf')
@@ -17,8 +18,8 @@ def removeOutliers(point_cloud, min_val=5, min_dist=5):
     min_val = (((maximum - minimum)/100) * min_val) + minimum
 
     for point in point_cloud:
-        condition_dist = point['dist'] > min_dist
         condition_val =  point['value'] >= min_val
+        condition_dist = distance((point['x'], point['y']), (0, 0)) > min_dist
         if condition_dist and condition_val:
             new_point_cloud.append(point)
     return new_point_cloud
@@ -26,19 +27,14 @@ def removeOutliers(point_cloud, min_val=5, min_dist=5):
 
 'Remoção de ruído e suavização da nuvem de pontos'
 def removeNoise(point_cloud):
-    points = list()
-    for point in point_cloud:
-        points.append([
-            point['x'],
-            point['y'],
-            point['z']
-        ])
 
     'Filtro de suavização (MLS)'
-    pc = pcl.PointCloud(np.array(points, dtype=np.float32))
+    pc = pcl.PointCloud(parseToArray(point_cloud))
+    tree = pc.make_kdtree()
     pc = pc.make_moving_least_squares()
     pc.set_search_radius(3)
-    pc.set_polynomial_fit(0.5)
+    pc.set_polynomial_fit(True)
+    pc.set_Search_Method(tree)
     pc = pc.process()
 
     'Filtro de remoção de segmentos desnecessários'
@@ -56,14 +52,5 @@ def removeNoise(point_cloud):
     pc.set_mean_k(100)
     pc.set_std_dev_mul_thresh(1.5)
     pc = pc.filter()
-    pc = pc.to_list()
-
-    points = list()
-    for point in pc:
-        points.append({
-            'x': point[0],
-            'y': point[1],
-            'z': point[2]
-        })
     
-    return points
+    return pc

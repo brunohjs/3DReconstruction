@@ -5,7 +5,7 @@ import sys
 import numpy as np
 
 'Converter a nuvem de pontos em um arquivo .ply'
-def saveFile(dataset, filename=None):
+def saveFile(dataset, filename=None, original=False):
     points = list()
     for point in dataset:
         vert = (point['x'], point['y'], point['z'])
@@ -18,5 +18,8 @@ def saveFile(dataset, filename=None):
     if filename:
         namefile = "outputs/"+filename
     else:
-        namefile = "outputs/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]+'.ply'
+        if original:
+            namefile = "outputs/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]+'_original.ply'
+        else:
+            namefile = "outputs/"+os.path.splitext(os.path.basename(sys.argv[1]))[0]+'.ply'
     plyfile.PlyData([point_cloud], text=True).write(namefile)

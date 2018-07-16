@@ -12,6 +12,8 @@ def main():
     dataset = getHigherBin(dataset)
     point_cloud = generatePointCloud(dataset)
 
+    saveFile(point_cloud, original=True)
+
     'Filtragem'
     point_cloud = removeOutliers(point_cloud)
     point_cloud = removeNoise(point_cloud)

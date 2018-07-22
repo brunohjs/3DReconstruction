@@ -1,4 +1,5 @@
 from modules.calc import polar2Cartesian
+from modules.files import log
 
 global RANGE
 RANGE = 50
@@ -6,6 +7,8 @@ RANGE = 50
 
 'Pegar o dataset do arquivo texto'
 def getDataset(file):
+    log("Coletando dados do dataset")
+
     dataset = list()
     f = open(file)
     for line in f.readlines()[1:]:
@@ -30,6 +33,8 @@ def getDataset(file):
 
 'Separar o dataset em imagens'
 def splitDataset(dataset):
+    log("Separando o dataset em imagens")
+
     clockwise = False
     data = list()
     image = list()
@@ -57,6 +62,8 @@ def ordenizeDataset(dataset):
 
 'Função que coleta o maior valor e a posição de um bin em um beam'
 def getHigherBin(dataset):
+    log("Coletando os maiores bins dos beams")
+
     for image in dataset:
         for beam in image:
             higher = 0
@@ -77,6 +84,8 @@ def getHigherBin(dataset):
 
 'Refinar o dataset, removendo dados desnecessários e retorna uma nuvem de pontos'
 def generatePointCloud(dataset):
+    log("Gerando nuvem de pontos")
+
     refined = list()
     for image in dataset:
         for beam in image:

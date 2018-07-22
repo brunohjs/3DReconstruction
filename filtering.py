@@ -1,10 +1,12 @@
 import pcl
-from modules.files import parseToArray
+from modules.files import parseToArray, log
 from modules.calc import distance
 
 
 'Remoção de outliers da nuvem de pontos'
 def removeOutliers(point_cloud, min_dist=5, min_val=5):
+    log("Removendo outliers da nuvem de pontos")
+
     new_point_cloud = list()
 
     minimum = float('inf')
@@ -25,22 +27,15 @@ def removeOutliers(point_cloud, min_dist=5, min_val=5):
     return new_point_cloud
 
 
-'Remoção de ruído e suavização da nuvem de pontos'
+'Remoção de ruído da nuvem de pontos'
 def removeNoise(point_cloud):
-
-    'Filtro de suavização (MLS)'
-    pc = pcl.PointCloud(parseToArray(point_cloud))
-    tree = pc.make_kdtree()
-    pc = pc.make_moving_least_squares()
-    pc.set_search_radius(3)
-    pc.set_polynomial_fit(True)
-    pc.set_Search_Method(tree)
-    pc = pc.process()
+    log("Removendo ruídos da nuvem de pontos")
 
     'Filtro de remoção de segmentos desnecessários'
+    pc = pcl.PointCloud(parseToArray(point_cloud))
     seg = pc.make_segmenter_normals(searchRadius=10)
     seg.set_optimize_coefficients(True)
-    seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
+    seg.set_model_type(pcl.SACMODEL_PLANE)
     seg.set_method_type(2)
     seg.set_normal_distance_weight(2)
     seg.set_distance_threshold(1)
@@ -52,5 +47,20 @@ def removeNoise(point_cloud):
     pc.set_mean_k(100)
     pc.set_std_dev_mul_thresh(1.5)
     pc = pc.filter()
+    
+    return pc
+
+
+'Suavização da nuvem de pontos'
+def smoothing(point_cloud):
+    log("Suavização da nuvem de pontos")
+
+    pc = pcl.PointCloud(point_cloud)
+    pc = pc.make_moving_least_squares()
+    pc.set_search_radius(5)
+    pc.set_polynomial_fit(True)
+    pc = pc.process()
+
+    pc.calc_normals(50)
     
     return pc

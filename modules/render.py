@@ -5,8 +5,9 @@ from io_mesh_ply import import_ply
 from io_pcd import *
 import os.path
 
+
 #comando pra executar o script no blender
-#blender --python ~/Desktop/3DReconstruction/modules/render.py outputs/wall2.py
+#blender --python ~/Desktop/3DReconstruction/modules/render.py outputs/wall2.ply
 
 position = mathutils.Vector((0,0,92))
 objects = list()
@@ -18,4 +19,4 @@ for i in range(3, len(sys.argv)):
     objects[-1].location = position
     bpy.context.scene.objects.link(objects[-1])
 
-bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
+#bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')

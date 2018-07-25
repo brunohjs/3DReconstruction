@@ -33,3 +33,20 @@ def quaternion2Euler(x, y, z, w):
 	t4 = +1 - 2 * (y**2 + z * z)
 	Z = math.atan2(t3, t4)
 	return X, Y, Z
+
+
+'Combinação de lista de 4 elementos'
+def combination(list_, simple=False):
+	l = list_
+	if simple:
+		return [
+			[l[0], l[1], l[2]],
+			[l[1], l[2], l[3]],
+		]
+	else:
+		return [
+			[l[0], l[1], l[2]],
+			[l[0], l[1], l[3]],
+			[l[0], l[2], l[3]],
+			[l[1], l[2], l[3]],
+		]

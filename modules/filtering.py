@@ -1,7 +1,7 @@
 import pcl
-from modules.parser import parseToArray
-from modules.files import log
-from modules.calc import distance
+from aux.parser import parseToArray
+from aux.files import log
+from aux.calc import distance
 
 
 'Remoção de outliers da nuvem de pontos'

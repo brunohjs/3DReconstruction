@@ -1,6 +1,6 @@
 import sys
 import time
-from modules.files import saveFile, log
+from aux.files import saveFile, log
 
 from pre_processing import *
 from filtering import *

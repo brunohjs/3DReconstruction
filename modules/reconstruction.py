@@ -2,8 +2,8 @@ import pcl
 import numpy as np
 from scipy.spatial import Delaunay
 from plyfile import PlyData, PlyElement
-from modules.calc import distance
-from modules.files import log
+from aux.calc import distance
+from aux.files import log
 
 
 def calcDistante(mesh, max_distance=1.2):

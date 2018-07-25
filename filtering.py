@@ -1,5 +1,6 @@
 import pcl
-from modules.files import parseToArray, log
+from modules.parser import parseToArray
+from modules.files import log
 from modules.calc import distance
 
 
@@ -47,20 +48,20 @@ def removeNoise(point_cloud):
     pc.set_mean_k(100)
     pc.set_std_dev_mul_thresh(1.5)
     pc = pc.filter()
+    pc = pc.to_array()
     
     return pc
 
 
 'Suavização da nuvem de pontos'
 def smoothing(point_cloud):
-    log("Suavização da nuvem de pontos")
+    log("Suavizando da nuvem de pontos")
 
     pc = pcl.PointCloud(point_cloud)
     pc = pc.make_moving_least_squares()
     pc.set_search_radius(5)
     pc.set_polynomial_fit(True)
     pc = pc.process()
-
-    pc.calc_normals(50)
+    pc = pc.to_array()
     
     return pc

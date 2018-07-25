@@ -1,9 +1,12 @@
 import sys
 import time
+from modules.files import saveFile, log
+
 from pre_processing import *
 from filtering import *
+from reconstruction import *
 from comparison import *
-from modules.files import saveFile, log
+
 
 
 def main():
@@ -14,22 +17,24 @@ def main():
     dataset = splitDataset(dataset)
     dataset = ordenizeDataset(dataset)
     dataset = getHigherBin(dataset)
-    point_cloud = generatePointCloud(dataset)
+    pcloud_original = generatePointCloud(dataset)
     
-    saveFile(point_cloud, original=True)
+    saveFile(pcloud_original, type_='original')
 
     'Filtragem'
-    point_cloud = removeOutliers(point_cloud)
-    point_cloud = removeNoise(point_cloud)
-    point_cloud = smoothing(point_cloud)
+    pcloud = removeOutliers(pcloud_original)
+    pcloud = removeNoise(pcloud)
+    pcloud = smoothing(pcloud)
     
     'Reconstrução'
+    #pcloud = reconstruct(pcloud)
 
     'Comparação'
-    #point_cloud = comparison()
+    pcloud_result = comparison(pcloud, pcloud_original)
 
     'Salvar em arquivo'
-    saveFile(point_cloud)
+    saveFile(pcloud)
+    saveFile(pcloud_result, type_='result')
 
     t1 = time.time()
     dt = str(round(t1 - t0, 2))+'s'

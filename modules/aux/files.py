@@ -2,30 +2,35 @@ import os.path
 import os
 import sys
 import pcl
-from aux.parser import parseToPointCloud
+from glob import glob
+from modules.aux.parser import parseToPointCloud
 
+
+def removeOldFiles(path):
+    files = glob(path+"*")
+    for filename in files:
+        os.remove(filename)
 
 'Função que printa logs no terminal'
 def log(text):
     print('>', text)
 
 'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
-def saveFile(point_cloud, filename=None, ftype='.ply', type_="current"):
-    if not os.path.exists("../outputs/"):
-        os.mkdir("../outputs/")
-    if filename:
-        path = "../outputs/" + filename
-    else:
-        splited_name = os.path.splitext(os.path.basename(sys.argv[1]))
-        if type_ == 'original':
-            path = "../outputs/" + splited_name[0] + '_original' + ftype
+def saveFile(point_cloud, sufix=None, ftype='.ply', type_="current"):
+    splited_name = os.path.splitext(os.path.basename(sys.argv[1]))
+    if not os.path.exists("outputs/"):
+        os.mkdir("outputs/")
+    if not os.path.exists("outputs/"+splited_name[0]+"/"):
+        os.mkdir("outputs/"+splited_name[0]+"/")
+    if sufix:
+        path = "outputs/"+splited_name[0]+"/"+sufix+ftype
+        if sufix == 'original':
             log("Salvando nuvem de pontos original em: "+path)
-        elif type_ == 'result':
-            path = "../outputs/" + splited_name[0] + '_result' + ftype
+        elif sufix == 'result':
             log("Salvando nuvem de pontos resultante em: "+path)
-        else:
-            path = "../outputs/" + splited_name[0] + ftype
-            log("Salvando nuvem de pontos em: "+path)
+    else:
+        path = "outputs/"+splited_name[0]+"/"+splited_name[0]+ftype
+        log("Salvando nuvem de pontos em: "+path)
 
     point_cloud = parseToPointCloud(point_cloud)
     pcl.save(point_cloud, path)

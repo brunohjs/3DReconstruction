@@ -1,4 +1,4 @@
-from aux.parser import parseToPointCloud
+from modules.aux.parser import parseToPointCloud
 
 def comparison(cloud1, cloud2, resolution=4):
     cloud1 = parseToPointCloud(cloud1)

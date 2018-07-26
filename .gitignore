@@ -3,4 +3,5 @@ modules/__pycache__
 point_clouds/
 .vscode/
 teste.py
+outputs/
 

@@ -91,9 +91,10 @@ def generatePointCloud(dataset):
         for beam in image:
             x, y = polar2Cartesian(beam['higher']['dist'], beam['angle'])
             refined.append({
-                'x'     :   x,
-                'y'     :   y,
-                'z'     :   beam['z'],
-                'value' :   beam['higher']['value']
+                'x':   x,
+                'y':   y,
+                'z':   beam['z'],
+                'value':   beam['higher']['value'],
+                'angle':   beam['angle']
             })
     return refined

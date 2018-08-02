@@ -16,8 +16,8 @@ def log(text):
     print('>', text)
 
 'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
-def saveFile(point_cloud, sufix=None, ftype='.ply', type_="current"):
-    splited_name = os.path.splitext(os.path.basename(sys.argv[1]))
+def saveFile(point_cloud, filename, sufix=None, ftype='.ply', type_="current"):
+    splited_name = os.path.splitext(os.path.basename(filename))
     if not os.path.exists("outputs/"):
         os.mkdir("outputs/")
     if not os.path.exists("outputs/"+splited_name[0]+"/"):

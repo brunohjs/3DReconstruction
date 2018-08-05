@@ -94,14 +94,44 @@ def segmentationFilter(point_cloud):
 
 
 'Suavização da nuvem de pontos'
-def smoothing(point_cloud):
+def smoothingFilter(point_cloud):
     log("Suavizando da nuvem de pontos")
 
     pc = parseToPointCloud(point_cloud)
     pc = pc.make_moving_least_squares()
-    pc.set_search_radius(6)
+    pc.set_search_radius(5)
     pc.set_polynomial_fit(True)
     pc = pc.process()
     pc = pc.to_array()
     
     return pc
+
+
+'Função para remover pontos próximos'
+def disperseFilter(point_cloud, space=1):
+    log("Removendo pontos próximos na nuvem")
+
+    pc = parseToPointCloud(point_cloud)
+    pc = pc.make_voxel_grid_filter()
+    pc.set_leaf_size(space, space, space)
+    pc = pc.filter()
+    pc = pc.to_array()
+    
+    return pc
+
+
+def radialFilter(point_cloud, radius=1):
+    new_point_cloud = list()
+    list_index_to_discart = list()
+    for i in range(len(point_cloud)-1):
+        for j in range(i+1, len(point_cloud)):
+            d = distance(point_cloud[i], point_cloud[j])
+            if d <= radius:
+                list_index_to_discart.append(i)
+                break
+    for i in range(len(point_cloud)):
+        if i in list_index_to_discart:
+            continue
+        else:
+            new_point_cloud.append(point_cloud[i])
+    return new_point_cloud

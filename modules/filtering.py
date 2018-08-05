@@ -13,14 +13,14 @@ def removeExtAnglePoints(point_cloud, angle=120):
 
     new_point_cloud = list()
     for point in point_cloud:
-        if degrees(abs(point['angle'])) <= angle:
+        if degrees(abs(point['angle'])) <= angle/2:
             new_point_cloud.append(point)
     return new_point_cloud
 
 
 'Filtro que remove pontos próximos ao robô'
 def removeMinDistPoints(point_cloud, min_dist=5):
-    log(" - Removendo pontos próximos desnecessários")
+    log(" - Removendo pontos próximos ao sensor.")
 
     new_point_cloud = list()
     for point in point_cloud:

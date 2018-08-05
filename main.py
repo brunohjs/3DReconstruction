@@ -22,14 +22,22 @@ def main(args):
     pcloud_original = generatePointCloud(dataset)
     
     saveFile(pcloud_original, args, sufix='original')
-
+    
     'Filtragem'
     pcloud = removeOutliers(pcloud_original)
     saveFile(pcloud, args, sufix='filt1')
-    pcloud = smoothing(pcloud)
-    saveFile(pcloud, args, sufix='filt2')
+
     pcloud = staticalOutlierFilter(pcloud)
-    #pcloud = segmentationFilter(pcloud)
+    saveFile(pcloud, args, sufix='filt2')
+
+    pcloud = smoothingFilter(pcloud)
+    saveFile(pcloud, args, sufix='filt3')
+
+    pcloud = disperseFilter(pcloud, 1.5)
+    saveFile(pcloud, args, sufix='filt4')
+
+    pcloud = radialFilter(pcloud)
+    saveFile(pcloud, args, sufix='filt4')
 
     'Reconstrução'
     pcloud = reconstruct(pcloud)

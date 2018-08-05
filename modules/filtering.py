@@ -91,7 +91,7 @@ def smoothingFilter(point_cloud):
 
 
 'Função para remover pontos próximos'
-def disperseFilter(point_cloud, space=1):
+def downsamplerFilter(point_cloud, space=1):
     log("Removendo pontos próximos na nuvem")
     print(len(point_cloud))
 

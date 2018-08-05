@@ -68,26 +68,9 @@ def staticalOutlierFilter(point_cloud):
     pc = parseToPointCloud(point_cloud)
 
     pc = pc.make_statistical_outlier_filter()
-    pc.set_mean_k(500)
-    pc.set_std_dev_mul_thresh(2)
+    pc.set_mean_k(50)
+    pc.set_std_dev_mul_thresh(1)
     pc = pc.filter()
-    pc = pc.to_array()
-
-    return pc
-
-
-'Filtro de remoção de segmentos desnecessários'
-def segmentationFilter(point_cloud):
-    log("Segmentação da nuvem de pontos")
-
-    pc = parseToPointCloud(point_cloud)
-    seg = pc.make_segmenter()
-    seg.set_optimize_coefficients(True)
-    seg.set_model_type(pcl.SAC_RANSAC)
-    seg.set_method_type(1)
-    seg.set_distance_threshold(10)
-    indices, model = seg.segment()
-    pc = pc.extract(indices)
     pc = pc.to_array()
 
     return pc
@@ -110,12 +93,14 @@ def smoothingFilter(point_cloud):
 'Função para remover pontos próximos'
 def disperseFilter(point_cloud, space=1):
     log("Removendo pontos próximos na nuvem")
+    print(len(point_cloud))
 
     pc = parseToPointCloud(point_cloud)
     pc = pc.make_voxel_grid_filter()
     pc.set_leaf_size(space, space, space)
     pc = pc.filter()
     pc = pc.to_array()
+    print(len(pc))
     
     return pc
 

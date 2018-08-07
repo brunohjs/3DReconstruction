@@ -2,7 +2,6 @@ import pcl
 import numpy as np
 import itertools as it
 from scipy.spatial import Delaunay
-from plyfile import PlyData, PlyElement
 from shapely.geometry import Polygon
 from modules.aux.calc import distance
 from modules.aux.files import log
@@ -55,22 +54,16 @@ def overlapFilter(faces, vertex):
     return new_faces
 
 
+'Função principal do módulo'
 def reconstruct(point_cloud):
     log("Reconstruindo a superfície")
 
-    mesh = Delaunay(point_cloud)
-    mesh = calcDistance(mesh)
+    face = Delaunay(point_cloud)
+    face = calcDistance(face)
 
-    point_cloud = [(p[0], p[1], p[2]) for p in point_cloud]
+    vertex = [(p[0], p[1], p[2]) for p in point_cloud]
     #mesh = overlapFilter(mesh, point_cloud)
 
-    vertex = np.asarray(point_cloud, dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4')])
-    faces = np.asarray(mesh, dtype=[('len', 'i4'), ('v1', 'i4'), ('v2', 'i4'), ('v3', 'i4')])
+    log("Área total: "+str(totalArea(vertex, face)))
 
-    print("> Área total: ",totalArea(vertex, faces))
-
-    vertex_element = PlyElement.describe(vertex, 'vertex')
-    faces_element = PlyElement.describe(faces, 'face')
-
-    PlyData([vertex_element, faces_element], text=True).write('teste.ply')
-                
+    return vertex, face

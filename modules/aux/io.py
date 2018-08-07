@@ -21,20 +21,17 @@ def log(text):
 'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
 def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
     if comparison:
-        filenames = filename.split(' ')
-        splited_name1 = filenames[0].split('/')[-2]
-        splited_name2 = filenames[1].split('/')[-2]
+        splited_name1 = filename[0].split('/')[-2]
+        splited_name2 = filename[1].split('/')[-2]
         splited_name = splited_name1+"_"+splited_name2
         if not os.path.exists("outputs/comparisons/"):
             os.mkdir("outputs/comparisons/")
         if not os.path.exists("outputs/comparisons/"+splited_name+"/"):
             os.mkdir("outputs/comparisons/"+splited_name+"/")
-        path = "outputs/comparisons/"+splited_name+"/"+splited_name+'.ply'
-        point_cloud = parseToPointCloud(point_cloud)
-        try:
-            pcl.save(point_cloud, path)
-        except:
-            print('Erro ao salvar o arquivo. Nuvem de pontos vazia.')
+        if sufix:
+            path = "outputs/comparisons/"+splited_name+"/"+sufix+'.ply'
+        else:
+            path = "outputs/comparisons/"+splited_name+"/result.ply"
     else: 
         splited_name = os.path.splitext(os.path.basename(filename))   
         if not os.path.exists("outputs/"):
@@ -54,11 +51,11 @@ def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
         else:
             path = "outputs/surfaces/"+splited_name[0]+"/"+splited_name[0]+'.ply'
             log("Salvando nuvem de pontos em: "+path)
-        if face:
-            saveSurface(point_cloud, face, path)
-        else:
-            point_cloud = parseToPointCloud(point_cloud)
-            pcl.save(point_cloud, path)
+    if face:
+        saveSurface(point_cloud, face, path)
+    else:
+        point_cloud = parseToPointCloud(point_cloud)
+        pcl.save(point_cloud, path)
 
 
 

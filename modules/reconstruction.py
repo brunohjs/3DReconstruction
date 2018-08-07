@@ -60,7 +60,7 @@ def reconstruct(point_cloud):
 
     face = Delaunay(point_cloud)
     face = calcDistance(face)
-
+    
     vertex = [(p[0], p[1], p[2]) for p in point_cloud]
     #mesh = overlapFilter(mesh, point_cloud)
 

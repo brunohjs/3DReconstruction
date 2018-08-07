@@ -1,7 +1,9 @@
 from modules.aux.parser import parseToPointCloud
-from modules.aux.io import saveFile
+from modules.aux.io import saveFile, log
 
 def comparison(cloud1, cloud2, resolution=4):
+    log('Comparando modelos')
+
     cloud1 = parseToPointCloud(cloud1)
     cloud2 = parseToPointCloud(cloud2)
 
@@ -17,6 +19,3 @@ def comparison(cloud1, cloud2, resolution=4):
     cloud_result = cloud2.extract(index_vector_result)
 
     return cloud_result
-
-
-

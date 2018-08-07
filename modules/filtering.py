@@ -2,7 +2,7 @@ import pcl
 from math import degrees
 
 from modules.aux.parser import parseToPointCloud
-from modules.aux.files import log
+from modules.aux.io import log
 from modules.aux.calc import distance
 
 
@@ -93,14 +93,12 @@ def smoothingFilter(point_cloud):
 'Função para remover pontos próximos'
 def downsamplerFilter(point_cloud, space=1):
     log("Removendo pontos próximos na nuvem")
-    print(len(point_cloud))
 
     pc = parseToPointCloud(point_cloud)
     pc = pc.make_voxel_grid_filter()
     pc.set_leaf_size(space, space, space)
     pc = pc.filter()
     pc = pc.to_array()
-    print(len(pc))
     
     return pc
 

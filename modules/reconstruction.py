@@ -4,7 +4,7 @@ import itertools as it
 from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
 from modules.aux.calc import distance
-from modules.aux.files import log
+from modules.aux.io import log
 from modules.aux.geometry import totalArea 
 
 
@@ -64,6 +64,6 @@ def reconstruct(point_cloud):
     vertex = [(p[0], p[1], p[2]) for p in point_cloud]
     #mesh = overlapFilter(mesh, point_cloud)
 
-    log("Área total: "+str(totalArea(vertex, face)))
+    log(" - Área total da superfície: "+str(totalArea(vertex, face)))
 
     return vertex, face

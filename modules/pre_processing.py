@@ -1,5 +1,5 @@
 from modules.aux.calc import polar2Cartesian
-from modules.aux.files import log
+from modules.aux.io import log
 
 global RANGE
 RANGE = 50

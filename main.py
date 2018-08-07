@@ -2,7 +2,7 @@ import sys
 import time
 import glob
 
-from modules.aux.files import saveFile, log
+from modules.aux.io import saveFile, log
 
 from modules.pre_processing import *
 from modules.filtering import *
@@ -33,21 +33,17 @@ def main(args):
     pcloud = smoothingFilter(pcloud)
     saveFile(pcloud, args, sufix='filt3')
 
-    pcloud = disperseFilter(pcloud, 1.5)
-    saveFile(pcloud, args, sufix='filt4')
-
-    pcloud = radialFilter(pcloud)
+    pcloud = downsamplerFilter(pcloud, space=1)
     saveFile(pcloud, args, sufix='filt4')
 
     'Reconstrução'
-    pcloud = reconstruct(pcloud)
+    pcloud, face = reconstruct(pcloud)
 
     'Comparação'
     #pcloud_result = comparison(pcloud, pcloud_original)
 
     'Salvar em arquivo'
-    #saveFile(pcloud, args)
-    #saveFile(pcloud_result, args, sufix='result')
+    saveFile(pcloud, args, face=face, sufix='surface')
 
     t1 = time.time()
     dt = str(round(t1 - t0, 2))+'s'

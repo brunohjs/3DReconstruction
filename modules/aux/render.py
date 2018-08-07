@@ -3,7 +3,6 @@ import sys
 import mathutils
 from io_mesh_ply import import_ply
 from glob import glob
-from io_pcd import *
 import os.path
 
 

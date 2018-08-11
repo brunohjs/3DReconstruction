@@ -1,4 +1,4 @@
-from modules.aux.calc import polar2Cartesian
+from modules.aux.parser import polar2Cartesian
 from modules.aux.io import log
 
 global RANGE

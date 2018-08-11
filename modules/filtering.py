@@ -3,7 +3,7 @@ from math import degrees
 
 from modules.aux.parser import parseToPointCloud
 from modules.aux.io import log
-from modules.aux.calc import distance
+from modules.aux.geometry import distance
 
 
 
@@ -103,6 +103,7 @@ def downsamplerFilter(point_cloud, space=1):
     return pc
 
 
+'Função para remover pontos próximos'
 def radialFilter(point_cloud, radius=1):
     new_point_cloud = list()
     list_index_to_discart = list()

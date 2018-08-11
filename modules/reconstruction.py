@@ -3,9 +3,8 @@ import numpy as np
 import itertools as it
 from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
-from modules.aux.calc import distance
 from modules.aux.io import log
-from modules.aux.geometry import totalArea 
+from modules.aux.geometry import totalArea, distance
 
 
 'Função que remove triângulos que possuem um lado maior que -max_distance-'

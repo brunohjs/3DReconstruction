@@ -3,6 +3,7 @@ import time
 import glob
 
 from modules.aux.io import saveFile, plyToCloud, log
+from modules.aux.global_vars import *
 
 from modules.pre_processing import *
 from modules.filtering import *
@@ -45,7 +46,7 @@ def main(args):
     dataset = getDataset(args)
     dataset = splitDataset(dataset)
     dataset = ordenizeDataset(dataset)
-    dataset = getHigherBin(dataset)
+    dataset = getHigherBin(dataset, RANGE)
     pcloud_original = generatePointCloud(dataset)
     
     saveFile(pcloud_original, args, sufix='original')

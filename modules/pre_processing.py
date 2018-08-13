@@ -1,9 +1,6 @@
 from modules.aux.parser import polar2Cartesian
 from modules.aux.io import log
 
-global RANGE
-RANGE = 50
-
 
 'Pegar o dataset do arquivo texto'
 def getDataset(file):
@@ -61,7 +58,7 @@ def ordenizeDataset(dataset):
 
 
 'Função que coleta o maior valor e a posição de um bin em um beam'
-def getHigherBin(dataset):
+def getHigherBin(dataset, range_bin):
     log("Coletando os maiores bins dos beams")
 
     for image in dataset:
@@ -74,11 +71,25 @@ def getHigherBin(dataset):
                     higher_index = beam['raw'].index(bin_)
             beam['higher'] = {
                 'value': higher, 
-                'dist' : (higher_index+1)*len(beam['raw'])/RANGE,
+                'dist' : (higher_index+1)*len(beam['raw'])/range_bin,
                 'index': higher_index
             }
         if len(image) > 179:
             image.remove(image[-1])
+    return dataset
+
+
+'Função para mover os pontos para o refenrecial (0,0,0)'
+def movingReference(dataset, axis='z'):
+    min_val = float('inf')
+
+    for image in dataset:
+        for beam in image:
+            if beam[axis] < min_val:
+                min_val = beam[axis]
+        for beam in image:
+            beam[axis] = beam[axis] - min_val
+    
     return dataset
 
 

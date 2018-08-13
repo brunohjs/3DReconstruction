@@ -1,5 +1,5 @@
 import pcl
-from math import degrees
+from math import radians, degrees
 
 from modules.aux.parser import parseToPointCloud
 from modules.aux.io import log
@@ -8,29 +8,30 @@ from modules.aux.geometry import distance
 
 
 'Filtro que diminui o ângulo horizontal da coleta de dados do sensor'
-def removeExtAnglePoints(point_cloud, angle=120):
+def removeExtAnglePoints(point_cloud, angle):
     log(" - Removendo pontos fora do ângulo de abertura horizontal")
 
     new_point_cloud = list()
+    angle = radians(angle)
     for point in point_cloud:
-        if degrees(abs(point['angle'])) <= angle/2:
+        if abs(point['angle']) <= angle/2:
             new_point_cloud.append(point)
     return new_point_cloud
 
 
 'Filtro que remove pontos próximos ao robô'
-def removeMinDistPoints(point_cloud, min_dist=5):
+def removeMinDistPoints(point_cloud, min_dist):
     log(" - Removendo pontos próximos ao sensor.")
 
     new_point_cloud = list()
     for point in point_cloud:
-        if distance((point['x'], point['y'], point['z']), (0, 0, 0)) > min_dist:
+        if point['dist'] > min_dist:
             new_point_cloud.append(point)
     return new_point_cloud
 
 
 'Filtro que remove pontos com baixo valor de intensidade'
-def removeMinValPoints(point_cloud, min_val=5):
+def removeMinValPoints(point_cloud, min_val):
     log(" - Removendo pontos com baixo valor de intensidade")
 
     new_point_cloud = list()
@@ -51,14 +52,14 @@ def removeMinValPoints(point_cloud, min_val=5):
 
 
 'Remoção de outliers da nuvem de pontos'
-def removeOutliers(point_cloud, min_dist=5, min_val=5, angle=120):
+def removeOutliers(point_cloud, min_dist=20, min_val=5, angle=120):
     log("Removendo outliers da nuvem de pontos:")
     
-    new_point_cloud = removeExtAnglePoints(point_cloud, 120)
+    new_point_cloud = removeExtAnglePoints(point_cloud, angle)
     print(len(new_point_cloud))
-    new_point_cloud = removeMinDistPoints(new_point_cloud, 10)
+    new_point_cloud = removeMinDistPoints(new_point_cloud, min_dist)
     print(len(new_point_cloud))
-    new_point_cloud = removeMinValPoints(new_point_cloud, 5)
+    new_point_cloud = removeMinValPoints(new_point_cloud, min_val)
     print(len(new_point_cloud))
 
     return new_point_cloud

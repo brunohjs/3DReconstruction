@@ -79,20 +79,6 @@ def getHigherBin(dataset, range_bin):
     return dataset
 
 
-'Função para mover os pontos para o refenrecial (0,0,0)'
-def movingReference(dataset, axis='z'):
-    min_val = float('inf')
-
-    for image in dataset:
-        for beam in image:
-            if beam[axis] < min_val:
-                min_val = beam[axis]
-        for beam in image:
-            beam[axis] = beam[axis] - min_val
-    
-    return dataset
-
-
 'Refinar o dataset, removendo dados desnecessários e retorna uma nuvem de pontos'
 def generatePointCloud(dataset):
     log("Gerando nuvem de pontos")
@@ -106,6 +92,7 @@ def generatePointCloud(dataset):
                 'y':   y,
                 'z':   beam['z'],
                 'value':   beam['higher']['value'],
-                'angle':   beam['angle']
+                'angle':   beam['angle'],
+                'dist': beam['higher']['dist']
             })
     return refined

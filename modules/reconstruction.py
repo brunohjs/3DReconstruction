@@ -9,7 +9,7 @@ from modules.aux.parser import parserToList
 
 
 'Função que remove triângulos que possuem um lado maior que -max_distance-'
-def distanceSideTriangle(mesh, pcloud, max_distance=5):
+def distanceSideTriangle(mesh, pcloud, max_distance=10):
     log("Triangularizando os pontos")
 
     new_mesh = list()

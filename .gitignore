@@ -2,6 +2,5 @@ __pycache__/
 modules/__pycache__
 point_clouds/
 .vscode/
-teste.py
+test/
 outputs/
-teste.ply

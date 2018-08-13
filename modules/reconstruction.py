@@ -4,11 +4,12 @@ import itertools as it
 from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
 from modules.aux.io import log
-from modules.aux.geometry import totalArea, distance
+from modules.aux.geometry import totalArea, distance, projectOnPlane
+from modules.aux.parser import parserToList
 
 
 'Função que remove triângulos que possuem um lado maior que -max_distance-'
-def calcDistance(mesh, max_distance=3):
+def distanceSideTriangle(mesh, pcloud, max_distance=5):
     log("Triangularizando os pontos")
 
     new_mesh = list()
@@ -20,7 +21,7 @@ def calcDistance(mesh, max_distance=3):
             discart = False
             for i in range(len(shape)-1):
                 for j in range(i+1, len(shape)):
-                    d = distance(mesh.points[shape[i]], mesh.points[shape[j]])
+                    d = distance(pcloud[shape[i]], pcloud[shape[j]])
                     if d > max_distance:
                         discart = True
                         break
@@ -41,11 +42,11 @@ def overlapFilter(faces, vertex):
     index_to_discart = list()
 
     for i in range(len(faces)-1):
-        polygon_i = Polygon([vertex[faces[i][1]], vertex[faces[i][2]], vertex[faces[i][3]]]).buffer(-0.1)
+        polygon_i = Polygon([vertex[faces[i][1]], vertex[faces[i][2]], vertex[faces[i][3]]]).buffer(-0.02)
         discart = False
         for j in range(i+1, len(faces)):
-            polygon_j = Polygon([vertex[faces[j][1]], vertex[faces[j][2]], vertex[faces[j][3]]]).buffer(-0.1)
-            if polygon_i.intersects(polygon_j):
+            polygon_j = Polygon([vertex[faces[j][1]], vertex[faces[j][2]], vertex[faces[j][3]]])
+            if polygon_i.overlaps(polygon_j):
                 discart = True
                 break
         if not discart:
@@ -57,11 +58,11 @@ def overlapFilter(faces, vertex):
 def reconstruct(point_cloud):
     log("Reconstruindo a superfície")
 
-    face = Delaunay(point_cloud)
-    face = calcDistance(face)
+    pcloud_2d = projectOnPlane(point_cloud)
+    face = Delaunay(pcloud_2d)
+    face = distanceSideTriangle(face, point_cloud)
     
     vertex = [(p[0], p[1], p[2]) for p in point_cloud]
-    #mesh = overlapFilter(mesh, point_cloud)
 
     log(" - Área total da superfície: "+str(totalArea(vertex, face)))
 

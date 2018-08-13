@@ -55,9 +55,12 @@ def removeOutliers(point_cloud, min_dist=5, min_val=5, angle=120):
     log("Removendo outliers da nuvem de pontos:")
     
     new_point_cloud = removeExtAnglePoints(point_cloud, 120)
-    new_point_cloud = removeMinDistPoints(new_point_cloud, 5)
+    print(len(new_point_cloud))
+    new_point_cloud = removeMinDistPoints(new_point_cloud, 10)
+    print(len(new_point_cloud))
     new_point_cloud = removeMinValPoints(new_point_cloud, 5)
-    
+    print(len(new_point_cloud))
+
     return new_point_cloud
 
 
@@ -104,18 +107,16 @@ def downsamplerFilter(point_cloud, space=1):
 
 
 'Função para remover pontos próximos'
-def radialFilter(point_cloud, radius=1):
+def radialFilter(point_cloud, radius=0.9):
     new_point_cloud = list()
     list_index_to_discart = list()
     for i in range(len(point_cloud)-1):
         for j in range(i+1, len(point_cloud)):
             d = distance(point_cloud[i], point_cloud[j])
-            if d <= radius:
+            if d < radius:
                 list_index_to_discart.append(i)
                 break
     for i in range(len(point_cloud)):
-        if i in list_index_to_discart:
-            continue
-        else:
+        if i not in list_index_to_discart:
             new_point_cloud.append(point_cloud[i])
     return new_point_cloud

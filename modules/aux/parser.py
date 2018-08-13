@@ -55,3 +55,12 @@ def parseToPointCloud(var):
             return pcl.PointCloud(np.array(var, dtype=np.float32))
     else:
         return var
+
+
+'Função para converter os pontos para uma lista'
+def parserToList(array):
+    if type(array) is np.ndarray:
+        new_list = list()
+        for point in array:
+            new_list.append(list(point))
+        return new_list

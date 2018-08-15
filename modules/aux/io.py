@@ -6,9 +6,37 @@ from glob import glob
 from plyfile import PlyData
 from modules.aux.parser import parseToPointCloud
 
+
+'Função que retira o nome do arquivo'
+def getNamePath(path):
+    if type(path) is list and len(path) > 1:
+        splited_name = list()
+        for p in path:
+            splited_name.append(p.split('/'))
+            if splited_name[-1][-1] == '':
+                splited_name[-1] = splited_name[-1][-2]
+            else:
+                splited_name[-1] = splited_name[-1][-1]
+    else:
+        splited_name = path.split('/')
+        if splited_name[-1] == '':
+            splited_name = splited_name[-2]
+        else:
+            splited_name = splited_name[-1]
+    return splited_name
+
+
 'Função para remover arquivos .ply antigos'
-def removeOldFiles(path):
-    files = glob(path+"*")
+def removeOldFiles(path, comparison=False):
+    log('Deletando arquivos antigos')
+
+    splited_name = getNamePath(path)
+    if comparison:
+        splited_name = '_'.join(splited_name)
+        print(splited_name)
+        files = glob("outputs/comparissons/"+splited_name+"/*")
+    else:
+        files = glob("outputs/surfaces/"+splited_name+"/*")
     for filename in files:
         os.remove(filename)
 
@@ -21,9 +49,9 @@ def log(text):
 'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
 def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
     if comparison:
-        splited_name1 = filename[0].split('/')[-2]
-        splited_name2 = filename[1].split('/')[-2]
-        splited_name = splited_name1+"_"+splited_name2
+        splited_name = getNamePath(filename)
+        splited_name = '_'.join(splited_name)
+        
         if not os.path.exists("outputs/comparisons/"):
             os.mkdir("outputs/comparisons/")
         if not os.path.exists("outputs/comparisons/"+splited_name+"/"):
@@ -33,7 +61,8 @@ def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
         else:
             path = "outputs/comparisons/"+splited_name+"/result.ply"
     else: 
-        splited_name = os.path.splitext(os.path.basename(filename))   
+        splited_name = getNamePath(filename)  
+        
         if not os.path.exists("outputs/"):
             os.mkdir("outputs/")
         if not os.path.exists("outputs/surfaces/"):

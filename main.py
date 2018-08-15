@@ -2,7 +2,7 @@ import sys
 import time
 import glob
 
-from modules.aux.io import saveFile, plyToCloud, log
+from modules.aux.io import saveFile, plyToCloud, log, removeOldFiles
 from modules.aux.global_vars import *
 
 from modules.pre_processing import *
@@ -13,6 +13,8 @@ from modules.comparison import *
 
 def compare(c1_path, c2_path):
     t0 = time.time()
+
+    removeOldFiles([c1_path, c2_path], True)
 
     'Carregar arquivos das nuvens de pontos'
     cloud1 = plyToCloud(c1_path+'/result.ply')
@@ -41,6 +43,8 @@ def compare(c1_path, c2_path):
 
 def main(args):
     t0 = time.time()
+
+    removeOldFiles(args)
 
     'Pré-processamento'
     dataset = getDataset(args)

@@ -56,11 +56,8 @@ def removeOutliers(point_cloud, min_dist=20, min_val=5, angle=120):
     log("Removendo outliers da nuvem de pontos:")
     
     new_point_cloud = removeExtAnglePoints(point_cloud, angle)
-    print(len(new_point_cloud))
     new_point_cloud = removeMinDistPoints(new_point_cloud, min_dist)
-    print(len(new_point_cloud))
     new_point_cloud = removeMinValPoints(new_point_cloud, min_val)
-    print(len(new_point_cloud))
 
     return new_point_cloud
 

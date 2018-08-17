@@ -23,6 +23,8 @@ def getNamePath(path):
             splited_name = splited_name[-2]
         else:
             splited_name = splited_name[-1]
+        if splited_name[-4:] in ('.txt', '.ply'):
+            splited_name = splited_name[:-4]
     return splited_name
 
 
@@ -67,10 +69,10 @@ def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
             os.mkdir("outputs/")
         if not os.path.exists("outputs/surfaces/"):
             os.mkdir("outputs/surfaces/")
-        if not os.path.exists("outputs/surfaces/"+splited_name[0]+"/"):
-            os.mkdir("outputs/surfaces/"+splited_name[0]+"/")
+        if not os.path.exists("outputs/surfaces/"+splited_name+"/"):
+            os.mkdir("outputs/surfaces/"+splited_name+"/")
         if sufix:
-            path = "outputs/surfaces/"+splited_name[0]+"/"+sufix+'.ply'
+            path = "outputs/surfaces/"+splited_name+"/"+sufix+'.ply'
             if sufix == 'original':
                 log("Salvando nuvem de pontos original em: "+path)
             elif sufix == 'result':
@@ -78,11 +80,12 @@ def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
             elif sufix == 'surface':
                 log("Salvando superfície em: "+path)
         else:
-            path = "outputs/surfaces/"+splited_name[0]+"/"+splited_name[0]+'.ply'
+            path = "outputs/surfaces/"+splited_name+"/"+splited_name+'.ply'
             log("Salvando nuvem de pontos em: "+path)
     if face:
         saveSurface(point_cloud, face, path)
     else:
+        print(path)
         point_cloud = parseToPointCloud(point_cloud)
         pcl.save(point_cloud, path)
 

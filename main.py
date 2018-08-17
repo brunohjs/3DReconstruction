@@ -2,7 +2,7 @@ import sys
 import time
 import glob
 
-from modules.aux.io import saveFile, plyToCloud, log, removeOldFiles
+from modules.aux.io import *
 from modules.aux.global_vars import *
 
 from modules.pre_processing import *
@@ -25,15 +25,16 @@ def compare(c1_path, c2_path):
     pcloud_result = staticalOutlierFilter(pcloud_result)
 
     'Reconstrução'
+    print(c1_path, c2_path)
     pcloud, face = reconstruct(cloud1)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=c1_path.split('/')[-2]+'_surface', comparison=True)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_surface', comparison=True)
     pcloud, face = reconstruct(cloud2)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=c2_path.split('/')[-2]+'_surface', comparison=True)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_surface', comparison=True)
     pcloud, face = reconstruct(pcloud_result)
     saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
 
-    saveFile(cloud1, [c1_path, c2_path], sufix=c1_path.split('/')[-2], comparison=True)
-    saveFile(cloud2, [c1_path, c2_path], sufix=c2_path.split('/')[-2], comparison=True)
+    saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
+    saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
     saveFile(pcloud_result, [c1_path, c2_path], comparison=True)
 
     t1 = time.time()

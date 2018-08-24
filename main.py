@@ -25,7 +25,6 @@ def compare(c1_path, c2_path):
     pcloud_result = staticalOutlierFilter(pcloud_result)
 
     'Reconstrução'
-    print(c1_path, c2_path)
     pcloud, face = reconstruct(cloud1)
     saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_surface', comparison=True)
     pcloud, face = reconstruct(cloud2)

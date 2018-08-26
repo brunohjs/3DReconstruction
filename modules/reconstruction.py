@@ -4,7 +4,7 @@ import itertools as it
 from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
 from modules.aux.io import log
-from modules.aux.geometry import totalArea, distance, projectOnPlane
+from modules.aux.geometry import totalArea, distance, cloud2D, projectOnPlane
 from modules.aux.parser import parserToList
 
 
@@ -17,7 +17,7 @@ def distanceSideTriangle(mesh, pcloud, max_distance=10):
     if not max_distance:
         max_distance = float('inf')
 
-    for simplice in mesh.simplices:
+    for simplice in mesh:
         simplice = list(it.combinations(simplice,3))
         
         for shape in simplice:
@@ -33,7 +33,6 @@ def distanceSideTriangle(mesh, pcloud, max_distance=10):
             shape = tuple([3]+sorted(list(shape)))
             if not discart and shape not in new_mesh:
                 new_mesh.append(shape)
-
     return new_mesh
 
 
@@ -61,9 +60,9 @@ def overlapFilter(faces, vertex):
 def reconstruct(point_cloud):
     log("Reconstruindo a superfície")
 
-    pcloud_2d = projectOnPlane(point_cloud)
+    pcloud_2d = cloud2D(point_cloud)
     face = Delaunay(pcloud_2d)
-    face = distanceSideTriangle(face, point_cloud, False)
+    face = distanceSideTriangle(face.simplices, point_cloud, False)
     
     vertex = [(p[0], p[1], p[2]) for p in point_cloud]
 

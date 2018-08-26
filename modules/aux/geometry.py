@@ -19,6 +19,7 @@ def areaTriangle(points):
     p = (a+b+c)/2
     return (p*(p-a)*(p-b)*(p-c))**0.5
 
+
 'Função para validar faces'
 def validadeFace(shape):
     faces = list(it.permutations(shape, 4))
@@ -36,8 +37,8 @@ def totalArea(vertex, faces):
     return total_area
 
 
-'Função que projeta a nuvem de pontos em um plano 2D'
-def projectOnPlane(pcloud, plane='yz'):
+'Função que transforma a nuvem de pontos em 2D'
+def cloud2D(pcloud, plane='yz'):
     pcloud = parserToList(pcloud)
     new_pcloud = list()
     if 'x' not in plane:
@@ -51,3 +52,36 @@ def projectOnPlane(pcloud, plane='yz'):
             new_pcloud.append([point[0], point[1]])
     return new_pcloud
 
+
+'Retorna o menor valor de um eixo na nuvem de pontos'
+def getMaxValAxis(pcloud, axis):
+    if axis == 'x':
+        axis = 0
+    elif axis == 'y':
+        axis = 1
+    elif axis == 'z':
+        axis = 2
+
+    max_val = float('-inf')
+    for point in pcloud:
+        if point[axis] > max_val:
+            max_val = point[axis]
+    return max_val
+
+
+'Projeta a nuvem de pontos em um plano'
+def projectOnPlane(pcloud, dist=5, plane='yz'):
+    new_pcloud = list()
+    if 'x' not in plane:
+        dist = getMaxValAxis(pcloud, 'x') + dist
+        for point in pcloud:
+            new_pcloud.append([dist, point[1], point[2]])
+    elif 'y' not in plane:
+        dist = getMaxValAxis(pcloud, 'y') + dist
+        for point in pcloud:
+            new_pcloud.append([point[0], dist, point[2]])
+    elif 'z' not in plane:
+        dist = getMaxValAxis(pcloud, 'z') + dist
+        for point in pcloud:
+            new_pcloud.append([point[0], point[1], dist])
+    return list(pcloud)+new_pcloud

@@ -14,6 +14,9 @@ def distanceSideTriangle(mesh, pcloud, max_distance=10):
 
     new_mesh = list()
 
+    if not max_distance:
+        max_distance = float('inf')
+
     for simplice in mesh.simplices:
         simplice = list(it.combinations(simplice,3))
         
@@ -60,7 +63,7 @@ def reconstruct(point_cloud):
 
     pcloud_2d = projectOnPlane(point_cloud)
     face = Delaunay(pcloud_2d)
-    face = distanceSideTriangle(face, point_cloud)
+    face = distanceSideTriangle(face, point_cloud, False)
     
     vertex = [(p[0], p[1], p[2]) for p in point_cloud]
 

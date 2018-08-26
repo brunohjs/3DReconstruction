@@ -1,6 +1,6 @@
 import sys
 import time
-import glob
+from glob import glob
 
 from modules.aux.io import *
 from modules.aux.global_vars import *
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     elif len(sys.argv) > 1:
         main(sys.argv[1])
     else:
-        files = glob.glob('inputs/*.txt')
+        files = glob('inputs/*.txt')
         for file_ in files:
             try:
                 main(file_)

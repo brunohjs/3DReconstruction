@@ -35,7 +35,6 @@ def removeOldFiles(path, comparison=False):
     splited_name = getNamePath(path)
     if comparison:
         splited_name = '_'.join(splited_name)
-        print(splited_name)
         files = glob("outputs/comparissons/"+splited_name+"/*")
     else:
         files = glob("outputs/surfaces/"+splited_name+"/*")
@@ -85,7 +84,6 @@ def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
     if face:
         saveSurface(point_cloud, face, path)
     else:
-        print(path)
         point_cloud = parseToPointCloud(point_cloud)
         pcl.save(point_cloud, path)
 

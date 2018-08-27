@@ -84,4 +84,4 @@ def projectOnPlane(pcloud, dist=5, plane='yz'):
         dist = getMaxValAxis(pcloud, 'z') + dist
         for point in pcloud:
             new_pcloud.append([point[0], point[1], dist])
-    return list(pcloud)+new_pcloud
+    return new_pcloud

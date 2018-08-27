@@ -13,7 +13,6 @@ def distanceSideTriangle(mesh, pcloud, max_distance=10):
     log("Triangularizando os pontos")
 
     new_mesh = list()
-
     if not max_distance:
         max_distance = float('inf')
 
@@ -33,6 +32,8 @@ def distanceSideTriangle(mesh, pcloud, max_distance=10):
             shape = tuple([3]+sorted(list(shape)))
             if not discart and shape not in new_mesh:
                 new_mesh.append(shape)
+            else:
+                print('ok')
     return new_mesh
 
 
@@ -56,16 +57,48 @@ def overlapFilter(faces, vertex):
     return new_faces
 
 
+def volume(pcloud):
+    pcloud = parserToList(pcloud)
+    pcloud_2d = cloud2D(pcloud)
+    triangulation = Delaunay(pcloud_2d)
+    length = len(pcloud)
+
+    front_surface = list()
+    back_surface = list()
+    lateral_surface = list()
+    for face in triangulation.simplices:
+        front_surface.append([3, face[0], face[1], face[2]])
+        front_surface.append([3, length+face[0], length+face[1], length+face[2]])
+    for face in triangulation.convex_hull:
+        lateral_surface.append([3, face[0], length+face[0], length+face[1]])
+        lateral_surface.append([3, length+face[1], face[1], face[0]])
+    return front_surface+back_surface+lateral_surface
+
+
 'Função principal do módulo'
-def reconstruct(point_cloud):
+def reconstructSurface(pcloud):
     log("Reconstruindo a superfície")
 
-    pcloud_2d = cloud2D(point_cloud)
+    pcloud_2d = cloud2D(pcloud)
     face = Delaunay(pcloud_2d)
-    face = distanceSideTriangle(face.simplices, point_cloud, False)
-    
-    vertex = [(p[0], p[1], p[2]) for p in point_cloud]
+    face = [(3, p[0], p[1], p[2]) for p in face.simplices]
+    vertex = [(p[0], p[1], p[2]) for p in pcloud]
 
     log(" - Área total da superfície: "+str(totalArea(vertex, face)))
+
+    return vertex, face
+
+
+'Função principal do módulo'
+def reconstructVolume(pcloud):
+    log("Reconstruindo a superfície")
+
+    pcloud = parserToList(pcloud)
+    pcloud_plane = projectOnPlane(pcloud)
+    vertex = pcloud_plane + pcloud
+    face = volume(pcloud)
+
+
+    #log(" - Área total da superfície: "+str(totalArea(vertex, face)))
 
     return vertex, face

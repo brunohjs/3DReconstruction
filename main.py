@@ -63,11 +63,14 @@ def main(args):
     pcloud = smoothingFilter(pcloud)
     saveFile(pcloud, args, sufix='filt3')
     pcloud = downsamplerFilter(pcloud, space=1)
-    saveFile(pcloud, args, sufix='result')
+    saveFile(pcloud, args, sufix='surface_cloud')
 
     'Reconstrução'
-    pcloud, face = reconstruct(pcloud)
+    pcloud, face = reconstructSurface(pcloud)
     saveFile(pcloud, args, face=face, sufix='surface')
+    pcloud, face = reconstructVolume(pcloud)
+    saveFile(pcloud, args, sufix='volume_cloud')
+    saveFile(pcloud, args, face=face, sufix='volume')
 
     t1 = time.time()
     dt = str(round(t1 - t0, 2))+'s'

@@ -17,24 +17,25 @@ def compare(c1_path, c2_path):
     removeOldFiles([c1_path, c2_path], True)
 
     'Carregar arquivos das nuvens de pontos'
-    cloud1 = plyToCloud(c1_path+'/result.ply')
-    cloud2 = plyToCloud(c2_path+'/result.ply')
+    cloud1 = plyToCloud(c1_path+'/surface_cloud.ply')
+    cloud2 = plyToCloud(c2_path+'/surface_cloud.ply')
 
     'Comparar'
     pcloud_result = comparison(cloud1, cloud2)
     pcloud_result = staticalOutlierFilter(pcloud_result)
 
     'Reconstrução'
-    pcloud, face = reconstruct(cloud1)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_surface', comparison=True)
-    pcloud, face = reconstruct(cloud2)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_surface', comparison=True)
-    pcloud, face = reconstruct(pcloud_result)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
+    depth = averageDepth(cloud1, cloud2)
+    pcloud, face = reconstructVolume(cloud1, depth)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume', comparison=True)
+    pcloud, face = reconstructVolume(cloud2, depth)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume', comparison=True)
+    pcloud, face = reconstructVolume(pcloud_result, depth)
+    #saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
 
-    saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
-    saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
-    saveFile(pcloud_result, [c1_path, c2_path], comparison=True)
+    #saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
+    #saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
+    #saveFile(pcloud_result, [c1_path, c2_path], comparison=True)
 
     t1 = time.time()
     dt = str(round(t1 - t0, 2))+'s'
@@ -53,21 +54,21 @@ def main(args):
     dataset = getHigherBin(dataset, RANGE)
     pcloud_original = generatePointCloud(dataset)
     
-    saveFile(pcloud_original, args, sufix='original')
+    #saveFile(pcloud_original, args, sufix='original')
     
     'Filtragem'
     pcloud = removeOutliers(pcloud_original)
-    saveFile(pcloud, args, sufix='filt1')
+    #saveFile(pcloud, args, sufix='filt1')
     pcloud = staticalOutlierFilter(pcloud)
-    saveFile(pcloud, args, sufix='filt2')
+    #saveFile(pcloud, args, sufix='filt2')
     pcloud = smoothingFilter(pcloud)
-    saveFile(pcloud, args, sufix='filt3')
+    #saveFile(pcloud, args, sufix='filt3')
     pcloud = downsamplerFilter(pcloud, space=1)
     saveFile(pcloud, args, sufix='surface_cloud')
 
     'Reconstrução'
     pcloud, face = reconstructSurface(pcloud)
-    saveFile(pcloud, args, face=face, sufix='surface')
+    #saveFile(pcloud, args, face=face, sufix='surface')
     pcloud, face = reconstructVolume(pcloud)
     saveFile(pcloud, args, sufix='volume_cloud')
     saveFile(pcloud, args, face=face, sufix='volume')
@@ -85,8 +86,8 @@ if __name__ == '__main__':
     else:
         files = glob('inputs/*.txt')
         for file_ in files:
-            try:
-                main(file_)
-                log('Arquivo '+file_+' lido com sucesso.\n')
-            except:
-                log('Erro ao ler o arquivo '+file_+'\n')
+            #try:
+            main(file_)
+            log('Arquivo '+file_+' lido com sucesso.\n')
+            #except:
+            #log('Erro ao ler o arquivo '+file_+'\n')

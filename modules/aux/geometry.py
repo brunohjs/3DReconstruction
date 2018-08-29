@@ -37,24 +37,8 @@ def totalArea(vertex, faces):
     return total_area
 
 
-'Função que transforma a nuvem de pontos em 2D'
-def cloud2D(pcloud, plane='yz'):
-    pcloud = parserToList(pcloud)
-    new_pcloud = list()
-    if 'x' not in plane:
-        for point in pcloud:
-            new_pcloud.append([point[1], point[2]])
-    elif 'y' not in plane:
-        for point in pcloud:
-            new_pcloud.append([point[0], point[2]])
-    elif 'z' not in plane:
-        for point in pcloud:
-            new_pcloud.append([point[0], point[1]])
-    return new_pcloud
-
-
 'Retorna o menor valor de um eixo na nuvem de pontos'
-def getMaxValAxis(pcloud, axis):
+def getMaxValAxis(pcloud, axis='x'):
     if axis == 'x':
         axis = 0
     elif axis == 'y':
@@ -67,21 +51,3 @@ def getMaxValAxis(pcloud, axis):
         if point[axis] > max_val:
             max_val = point[axis]
     return max_val
-
-
-'Projeta a nuvem de pontos em um plano'
-def projectOnPlane(pcloud, dist=5, plane='yz'):
-    new_pcloud = list()
-    if 'x' not in plane:
-        dist = getMaxValAxis(pcloud, 'x') + dist
-        for point in pcloud:
-            new_pcloud.append([dist, point[1], point[2]])
-    elif 'y' not in plane:
-        dist = getMaxValAxis(pcloud, 'y') + dist
-        for point in pcloud:
-            new_pcloud.append([point[0], dist, point[2]])
-    elif 'z' not in plane:
-        dist = getMaxValAxis(pcloud, 'z') + dist
-        for point in pcloud:
-            new_pcloud.append([point[0], point[1], dist])
-    return new_pcloud

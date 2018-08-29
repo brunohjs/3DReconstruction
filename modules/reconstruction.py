@@ -4,7 +4,39 @@ import itertools as it
 from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
 from modules.aux.io import log
-from modules.aux.geometry import totalArea, distance, cloud2D, projectOnPlane
+from modules.aux.parser import parserToList
+from modules.aux.geometry import totalArea, distance, getMaxValAxis
+
+
+'Função que transforma a nuvem de pontos em 2D'
+def cloud2D(pcloud, plane='yz'):
+    pcloud = parserToList(pcloud)
+    new_pcloud = list()
+    if 'x' not in plane:
+        for point in pcloud:
+            new_pcloud.append([point[1], point[2]])
+    elif 'y' not in plane:
+        for point in pcloud:
+            new_pcloud.append([point[0], point[2]])
+    elif 'z' not in plane:
+        for point in pcloud:
+            new_pcloud.append([point[0], point[1]])
+    return new_pcloud
+
+
+'Projeta a nuvem de pontos em um plano'
+def projectOnPlane(pcloud, dist, plane='yz'):
+    new_pcloud = list()
+    if 'x' not in plane:
+        for point in pcloud:
+            new_pcloud.append([dist, point[1], point[2]])
+    elif 'y' not in plane:
+        for point in pcloud:
+            new_pcloud.append([point[0], dist, point[2]])
+    elif 'z' not in plane:
+        for point in pcloud:
+            new_pcloud.append([point[0], point[1], dist])
+    return new_pcloud
 
 
 'Função que gera o volume a partir de uma nuvem de pontos'
@@ -40,10 +72,13 @@ def reconstructSurface(pcloud):
 
 
 'Função principal do módulo'
-def reconstructVolume(pcloud):
+def reconstructVolume(pcloud, depth=None, dist=5):
     log("Reconstruindo a superfície")
 
-    pcloud_plane = projectOnPlane(pcloud)
+    pcloud = parserToList(pcloud)
+    if not depth:
+        depth = getMaxValAxis(pcloud) + dist
+    pcloud_plane = projectOnPlane(pcloud, depth)
     vertex = pcloud_plane + pcloud
     face = volume(pcloud)
 

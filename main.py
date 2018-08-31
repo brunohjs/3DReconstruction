@@ -2,8 +2,8 @@ import sys
 import time
 from glob import glob
 
-from modules.aux.io import *
-from modules.aux.global_vars import *
+from modules.helpers.io import *
+from modules.helpers.global_vars import *
 
 from modules.pre_processing import *
 from modules.filtering import *

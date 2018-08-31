@@ -1,5 +1,5 @@
-from modules.aux.parser import polar2Cartesian
-from modules.aux.io import log
+from modules.helpers.parser import polar2Cartesian
+from modules.helpers.io import log
 
 
 'Pegar o dataset do arquivo texto'

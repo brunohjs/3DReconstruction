@@ -1,9 +1,9 @@
 import pcl
 from math import radians, degrees
 
-from modules.aux.parser import parseToPointCloud
-from modules.aux.io import log
-from modules.aux.geometry import distance
+from modules.helpers.parser import parseToPointCloud
+from modules.helpers.io import log
+from modules.helpers.geometry import distance
 
 
 

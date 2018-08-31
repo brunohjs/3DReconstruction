@@ -1,5 +1,5 @@
-from modules.aux.parser import parseToPointCloud
-from modules.aux.io import saveFile, log
+from modules.helpers.parser import parseToPointCloud
+from modules.helpers.io import saveFile, log
 
 def comparison(cloud1, cloud2, resolution=2):
     log('Comparando modelos')

@@ -48,45 +48,48 @@ def log(text):
 
 
 'Função para salvar nuvem de pontos em arquivo nos formatos .ply e .pcd'
-def saveFile(point_cloud, filename, face=None, sufix=None, comparison=False):
-    if comparison:
-        splited_name = getNamePath(filename)
-        splited_name = '_'.join(splited_name)
-        
-        if not os.path.exists("outputs/comparisons/"):
-            os.mkdir("outputs/comparisons/")
-        if not os.path.exists("outputs/comparisons/"+splited_name+"/"):
-            os.mkdir("outputs/comparisons/"+splited_name+"/")
-        if sufix:
-            path = "outputs/comparisons/"+splited_name+"/"+sufix+'.ply'
+def saveFile(point_cloud, filename=None, face=None, sufix=None, comparison=False):
+    if filename:
+        if comparison:
+            splited_name = getNamePath(filename)
+            splited_name = '_'.join(splited_name)
+            
+            if not os.path.exists("outputs/comparisons/"):
+                os.mkdir("outputs/comparisons/")
+            if not os.path.exists("outputs/comparisons/"+splited_name+"/"):
+                os.mkdir("outputs/comparisons/"+splited_name+"/")
+            if sufix:
+                path = "outputs/comparisons/"+splited_name+"/"+sufix+'.ply'
+            else:
+                path = "outputs/comparisons/"+splited_name+"/result.ply"
+        else: 
+            splited_name = getNamePath(filename)  
+            
+            if not os.path.exists("outputs/"):
+                os.mkdir("outputs/")
+            if not os.path.exists("outputs/surfaces/"):
+                os.mkdir("outputs/surfaces/")
+            if not os.path.exists("outputs/surfaces/"+splited_name+"/"):
+                os.mkdir("outputs/surfaces/"+splited_name+"/")
+            if sufix:
+                path = "outputs/surfaces/"+splited_name+"/"+sufix+'.ply'
+                if sufix == 'original':
+                    log("Salvando nuvem de pontos original em: "+path)
+                elif sufix == 'result':
+                    log("Salvando nuvem de pontos resultante em: "+path)
+                elif sufix == 'surface':
+                    log("Salvando superfície em: "+path)
+            else:
+                path = "outputs/surfaces/"+splited_name+"/"+splited_name+'.ply'
+                log("Salvando nuvem de pontos em: "+path)
+        if face:
+            saveSurface(point_cloud, face, path)
         else:
-            path = "outputs/comparisons/"+splited_name+"/result.ply"
-    else: 
-        splited_name = getNamePath(filename)  
-        
-        if not os.path.exists("outputs/"):
-            os.mkdir("outputs/")
-        if not os.path.exists("outputs/surfaces/"):
-            os.mkdir("outputs/surfaces/")
-        if not os.path.exists("outputs/surfaces/"+splited_name+"/"):
-            os.mkdir("outputs/surfaces/"+splited_name+"/")
-        if sufix:
-            path = "outputs/surfaces/"+splited_name+"/"+sufix+'.ply'
-            if sufix == 'original':
-                log("Salvando nuvem de pontos original em: "+path)
-            elif sufix == 'result':
-                log("Salvando nuvem de pontos resultante em: "+path)
-            elif sufix == 'surface':
-                log("Salvando superfície em: "+path)
-        else:
-            path = "outputs/surfaces/"+splited_name+"/"+splited_name+'.ply'
-            log("Salvando nuvem de pontos em: "+path)
-    if face:
-        saveSurface(point_cloud, face, path)
+            point_cloud = parseToPointCloud(point_cloud)
+            pcl.save(point_cloud, path)
     else:
         point_cloud = parseToPointCloud(point_cloud)
-        pcl.save(point_cloud, path)
-
+        pcl.save(point_cloud, 'teste.ply')
 
 
 'Função que salva a superfície em um arquivo .ply'

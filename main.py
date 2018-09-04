@@ -25,7 +25,7 @@ def compare(c1_path, c2_path):
     pcloud_result = staticalOutlierFilter(pcloud_result)
 
     'Reconstrução'
-    depth = averageDepth(cloud1, cloud2)
+    depth = averageDepth(cloud1, cloud2, 0)
     pcloud, face = reconstructVolume(cloud1, depth)
     saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume', comparison=True)
     pcloud, face = reconstructVolume(cloud2, depth)
@@ -33,8 +33,8 @@ def compare(c1_path, c2_path):
     pcloud, face = reconstructVolume(pcloud_result, depth)
     #saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
 
-    #saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
-    #saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
+    saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
+    saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
     #saveFile(pcloud_result, [c1_path, c2_path], comparison=True)
 
     t1 = time.time()
@@ -68,7 +68,7 @@ def main(args):
 
     'Reconstrução'
     pcloud, face = reconstructSurface(pcloud)
-    #saveFile(pcloud, args, face=face, sufix='surface')
+    saveFile(pcloud, args, face=face, sufix='surface')
     pcloud, face = reconstructVolume(pcloud)
     saveFile(pcloud, args, sufix='volume_cloud')
     saveFile(pcloud, args, face=face, sufix='volume')

@@ -45,16 +45,15 @@ def volume(pcloud):
     triangulation = Delaunay(pcloud_2d)
     length = len(pcloud)
 
-    front_surface = list()
     back_surface = list()
     lateral_surface = list()
     for face in triangulation.simplices:
-        front_surface.append([3, face[0], face[1], face[2]])
-        front_surface.append([3, length+face[0], length+face[1], length+face[2]])
+        back_surface.append([3, face[0], face[1], face[2]])
+        back_surface.append([3, length+face[0], length+face[1], length+face[2]])
     for face in triangulation.convex_hull:
         lateral_surface.append([3, face[0], length+face[0], length+face[1]])
         lateral_surface.append([3, length+face[1], face[1], face[0]])
-    return front_surface+back_surface+lateral_surface
+    return back_surface+lateral_surface
 
 
 'Função principal do módulo'

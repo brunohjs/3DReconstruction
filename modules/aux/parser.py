@@ -58,7 +58,7 @@ def parseToPointCloud(var):
 
 
 'Função para converter os pontos para uma lista'
-def parserToList(array):
+def parseToList(array):
     new_list = list()
     if type(array) in (np.ndarray, list):
         for point in array:

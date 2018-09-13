@@ -1,6 +1,5 @@
 import itertools as it
 from shapely.geometry import Polygon
-from modules.aux.parser import parserToList
 
 
 'Distância euclidiana entre dois pontos'
@@ -37,7 +36,7 @@ def totalArea(vertex, faces):
     return total_area
 
 
-'Retorna o menor valor de um eixo na nuvem de pontos'
+'Retorna o maior valor de um eixo na nuvem de pontos'
 def getMaxValAxis(pcloud, axis='x'):
     if axis == 'x':
         axis = 0

@@ -88,8 +88,11 @@ def saveFile(point_cloud, filename=None, face=None, sufix=None, comparison=False
             point_cloud = parseToPointCloud(point_cloud)
             pcl.save(point_cloud, path)
     else:
-        point_cloud = parseToPointCloud(point_cloud)
-        pcl.save(point_cloud, 'teste.ply')
+        if face:
+            saveSurface(point_cloud, face, 'teste_'+sufix+'.ply')
+        else:
+            point_cloud = parseToPointCloud(point_cloud)
+            pcl.save(point_cloud, 'teste.ply')
 
 
 'Função que salva a superfície em um arquivo .ply'

@@ -26,10 +26,17 @@ def compare(c1_path, c2_path):
 
     'Reconstrução'
     depth = averageDepth(cloud1, cloud2, 0)
+    
     pcloud, face = reconstructVolume(cloud1, depth)
     saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume', comparison=True)
+    pcloud, face = reconstructVolume(cloud1, depth, False)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume2', comparison=True)
+
     pcloud, face = reconstructVolume(cloud2, depth)
     saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume', comparison=True)
+    pcloud, face = reconstructVolume(cloud2, depth, False)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume2', comparison=True)
+
     pcloud, face = reconstructVolume(pcloud_result, depth)
     #saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
 

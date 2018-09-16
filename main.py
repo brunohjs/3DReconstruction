@@ -20,28 +20,29 @@ def compare(c1_path, c2_path):
     cloud1 = plyToCloud(c1_path+'/surface_cloud.ply')
     cloud2 = plyToCloud(c2_path+'/surface_cloud.ply')
 
+    'Transformar as nuvens em lista'
+    cloud1 = parseToList(cloud1)
+    cloud2 = parseToList(cloud2)
+
     'Comparar'
     pcloud_result = comparison(cloud1, cloud2)
     pcloud_result = staticalOutlierFilter(pcloud_result)
 
     'Reconstrução'
-    depth = averageDepth(cloud1, cloud2, 0)
+    back_points = similarBackPoints(cloud1, cloud2)
+    cloud1 = cloud1 + back_points
+    cloud2 = cloud2 + back_points
     
-    pcloud, face = reconstructVolume(cloud1, depth)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume', comparison=True)
-    pcloud, face = reconstructVolume(cloud1, depth, False)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume2', comparison=True)
-
-    pcloud, face = reconstructVolume(cloud2, depth)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume', comparison=True)
-    pcloud, face = reconstructVolume(cloud2, depth, False)
-    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume2', comparison=True)
-
-    pcloud, face = reconstructVolume(pcloud_result, depth)
-    #saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
-
+    pcloud, face = reconstructVolume(cloud1)
     saveFile(cloud1, [c1_path, c2_path], sufix=getNamePath(c1_path), comparison=True)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c1_path)+'_volume', comparison=True)
+    
+    pcloud, face = reconstructVolume(cloud2)
     saveFile(cloud2, [c1_path, c2_path], sufix=getNamePath(c2_path), comparison=True)
+    saveFile(pcloud, [c1_path, c2_path], face=face, sufix=getNamePath(c2_path)+'_volume', comparison=True)
+
+    #pcloud, face = reconstructVolume(pcloud_result, depth)
+    #saveFile(pcloud, [c1_path, c2_path], face=face, sufix='surface', comparison=True)
     #saveFile(pcloud_result, [c1_path, c2_path], comparison=True)
 
     t1 = time.time()

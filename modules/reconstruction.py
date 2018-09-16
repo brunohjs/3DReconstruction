@@ -40,7 +40,7 @@ def projectOnPlane(pcloud, dist, plane='yz'):
 
 
 'Função que gera o volume a partir de uma nuvem de pontos'
-def volume(pcloud, with_frontal=True):
+def volume(pcloud, with_frontal=True, with_back=False):
     pcloud_2d = cloud2D(pcloud)
     triangulation = Delaunay(pcloud_2d)
     length = len(pcloud)
@@ -54,8 +54,10 @@ def volume(pcloud, with_frontal=True):
     for face in triangulation.convex_hull:
         lateral_surface.append([3, face[0], length+face[0], length+face[1]])
         lateral_surface.append([3, length+face[1], face[1], face[0]])
-    if with_frontal:
+    if with_frontal and with_back:
         return frontal_surface+back_surface+lateral_surface
+    elif with_frontal:
+        return frontal_surface+lateral_surface
     else:
         return back_surface+lateral_surface
 
@@ -73,7 +75,7 @@ def reconstructSurface(pcloud):
 
 
 'Função principal do módulo'
-def reconstructVolume(pcloud, depth=None, with_frontal=True):
+def reconstructVolume(pcloud, depth=None, with_frontal=True, with_back=False):
     log("Reconstruindo a superfície")
 
     pcloud = parseToList(pcloud)
@@ -81,7 +83,7 @@ def reconstructVolume(pcloud, depth=None, with_frontal=True):
         depth = getMaxValAxis(pcloud)
     pcloud_plane = projectOnPlane(pcloud, depth)
     vertex = pcloud_plane + pcloud
-    face = volume(pcloud, with_frontal)
+    face = volume(pcloud, with_frontal, with_back)
 
     #log(" - Área total da superfície: "+str(totalArea(vertex, face)))
     return vertex, face
@@ -111,5 +113,42 @@ def removeFrontalSurface(pcloud, depth=None):
     return 
     
 
+'Função que encontra os 4 pontos posteriores nas duas nuvens'
+def similarBackPoints(pcloud1, pcloud2):
+    pcloud1 = parseToList(pcloud1)
+    pcloud2 = parseToList(pcloud2)
+    INF = float('inf')
+    y_min = INF
+    y_max = -INF
+    z_min = INF
+    z_max = -INF
+    x_max = -INF
+    for point in pcloud1:
+        if x_max < point[0]:
+            x_max = point[0]
+        if z_min > point[2]:
+            z_min = point[2]
+        if z_max < point[2]:
+            z_max = point[2]  
+        if y_min > point[1]:
+            y_min = point[1]
+        if y_max < point[1]:
+            y_max = point[1]
+    for point in pcloud2:
+        if x_max < point[0]:
+            x_max = point[0]
+        if z_min > point[2]:
+            z_min = point[2]
+        if z_max < point[2]:
+            z_max = point[2]  
+        if y_min > point[1]:
+            y_min = point[1]
+        if y_max < point[1]:
+            y_max = point[1]
+
+    return [[x_max, y_min, z_min], 
+        [x_max, y_min, z_max], 
+        [x_max, y_max, z_max],
+        [x_max, y_max, z_min]]
     
 

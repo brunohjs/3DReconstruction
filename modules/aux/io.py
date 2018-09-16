@@ -35,7 +35,7 @@ def removeOldFiles(path, comparison=False):
     splited_name = getNamePath(path)
     if comparison:
         splited_name = '_'.join(splited_name)
-        files = glob("outputs/comparissons/"+splited_name+"/*")
+        files = glob("outputs/comparisons/"+splited_name+"/*")
     else:
         files = glob("outputs/surfaces/"+splited_name+"/*")
     for filename in files:
@@ -92,7 +92,7 @@ def saveFile(point_cloud, filename=None, face=None, sufix=None, comparison=False
             saveSurface(point_cloud, face, 'teste_'+sufix+'.ply')
         else:
             point_cloud = parseToPointCloud(point_cloud)
-            pcl.save(point_cloud, 'teste.ply')
+            pcl.save(point_cloud, 'teste_'+sufix+'.ply')
 
 
 'Função que salva a superfície em um arquivo .ply'

@@ -62,7 +62,7 @@ def main(args):
     dataset = getHigherBin(dataset, RANGE)
     pcloud_original = generatePointCloud(dataset)
     
-    #saveFile(pcloud_original, args, sufix='original')
+    saveFile(pcloud_original, args, sufix='original')
     
     'Filtragem'
     pcloud = removeOutliers(pcloud_original)

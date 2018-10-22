@@ -128,3 +128,14 @@ def plyToCloud(path):
         point_cloud.append([float(point[0]), float(point[1]), float(point[2])])
     point_cloud = parseToPointCloud(point_cloud)
     return point_cloud
+
+'Função para converter um arquivo .ply para uma lista'
+def plyToList(path):
+    log('Carregando nuvem de pontos em: '+path)
+    vertex = list()
+    face = list()
+    for point in PlyData.read(path).elements[0].data:
+        vertex.append([float(point[0]), float(point[1]), float(point[2])])
+    for point in PlyData.read(path).elements[1].data:
+        face.append([int(point[0][0]), int(point[0][1]), int(point[0][2])])
+    return vertex, face

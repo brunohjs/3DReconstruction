@@ -75,12 +75,13 @@ def reconstructSurface(pcloud):
 
 
 'Função principal do módulo'
-def reconstructVolume(pcloud, depth=None, with_frontal=True, with_back=False):
+def reconstructVolume(pcloud, depth=None, with_frontal=True, with_back=True):
     log("Reconstruindo a superfície")
 
     pcloud = parseToList(pcloud)
     if not depth:
         depth = getMaxValAxis(pcloud)
+        print('depth', depth)
     pcloud_plane = projectOnPlane(pcloud, depth)
     vertex = pcloud_plane + pcloud
     face = volume(pcloud, with_frontal, with_back)

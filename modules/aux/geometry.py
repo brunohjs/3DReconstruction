@@ -36,6 +36,14 @@ def totalArea(vertex, faces):
     return total_area
 
 
+'Ponto médio entre dois pontos'
+def midPoint(p1, p2):
+    p = list()
+    for i in range(3):
+        p.append((p1[i] + p2[i])/2)
+    return p
+
+
 'Retorna o maior valor de um eixo na nuvem de pontos'
 def getMaxValAxis(pcloud, axis='x'):
     if axis == 'x':
@@ -50,3 +58,21 @@ def getMaxValAxis(pcloud, axis='x'):
         if point[axis] > max_val:
             max_val = point[axis]
     return max_val
+
+
+def getPointMaxValAxis(points, axis='x'):
+    if axis == 'x':
+        axis = 0
+    elif axis == 'y':
+        axis = 1
+    elif axis == 'z':
+        axis = 2
+
+    for i in range(len(points)-1):
+        aux = 0
+        for j in range(i+1, len(points)):
+            if points[i][axis] > points[j][axis]:
+                aux = points[i]
+                points[i] = points[j]
+                points[j] = aux
+    return points

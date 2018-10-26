@@ -40,7 +40,7 @@ def projectOnPlane(pcloud, dist, plane='yz'):
 
 
 'Função que gera o volume a partir de uma nuvem de pontos'
-def volume(pcloud, with_frontal=True, with_back=False):
+def generateVolume(pcloud, with_frontal=True, with_back=False):
     pcloud_2d = cloud2D(pcloud)
     triangulation = Delaunay(pcloud_2d)
     length = len(pcloud)
@@ -84,34 +84,10 @@ def reconstructVolume(pcloud, depth=None, with_frontal=True, with_back=True):
         print('depth', depth)
     pcloud_plane = projectOnPlane(pcloud, depth)
     vertex = pcloud_plane + pcloud
-    face = volume(pcloud, with_frontal, with_back)
+    face = generateVolume(pcloud, with_frontal, with_back)
 
     #log(" - Área total da superfície: "+str(totalArea(vertex, face)))
     return vertex, face
-
-
-def removeFrontalSurface(pcloud, depth=None):
-    pcloud = parseToList(pcloud)
-    if not depth:
-        depth = getMaxValAxis(pcloud)
-    pcloud_plane = projectOnPlane(pcloud, depth)
-    face = volume(pcloud)
-
-    pcloud_2d = cloud2D(pcloud)
-    triangulation = Delaunay(pcloud_2d)
-    length = len(pcloud)
-    print(triangulation.convex_hull)
-    
-    back_surface = list()
-    frontal_surface = list()
-    lateral_surface = list()
-    for face in triangulation.simplices:
-        back_surface.append([3, face[0], face[1], face[2]])
-        frontal_surface.append([3, length+face[0], length+face[1], length+face[2]])
-    for face in triangulation.convex_hull:
-        lateral_surface.append([3, face[0], length+face[0], length+face[1]])
-        lateral_surface.append([3, length+face[1], face[1], face[0]])
-    return 
     
 
 'Função que encontra os 4 pontos posteriores nas duas nuvens'

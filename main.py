@@ -4,6 +4,7 @@ from glob import glob
 
 from modules.aux.io import *
 from modules.aux.global_vars import *
+from modules.aux.volume import *
 
 from modules.pre_processing import *
 from modules.filtering import *
@@ -23,6 +24,10 @@ def compare(c1_path, c2_path):
     'Transformar as nuvens em lista'
     cloud1 = parseToList(cloud1)
     cloud2 = parseToList(cloud2)
+    average_val = averageDepth(cloud1, cloud2, 0)
+
+    'Cálculo de volume'
+    volumeCompare(c1_path, c2_path, average_val)
 
     'Comparar'
     pcloud_result = comparison(cloud1, cloud2)

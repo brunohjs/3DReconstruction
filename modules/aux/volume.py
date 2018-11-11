@@ -2,7 +2,7 @@ import sys
 import time
 
 from modules.aux.io import plyToList, plyToCloud
-from modules.aux.geometry import getMaxValAxis, getPointMaxValAxis, areaTriangle, distance, midPoint
+from modules.aux.geometry import *
 from modules.reconstruction import *
 
 'Cálculo da parte superior '
@@ -11,12 +11,13 @@ def topSide(points):
     if points[1][0] == points[2][0]:
         points.append([points[1][0], points[0][1], points[0][2]])
         area = areaTriangle([points[0], points[3], points[1]])
-        height = distance(points[3], points[2])
+        #height = distance(points[3], points[2])
+        height = getHeight(vet(points[3], points[2]), vet(points[3], points[1]))
     else:
         points.append([points[2][0], points[0][1], points[0][2]])
         points.append([points[2][0], points[1][1], points[1][2]])
         area = (distance(points[0], points[3]) + distance(points[1], points[4]))*distance(points[3], points[4])/2
-        height = distance(midPoint(points[3], points[4]), points[2])
+        height = getHeight(vet(points[3], points[0]), vet(points[3], points[4]))
     volume = area*height/3
     return volume, points
 
@@ -35,19 +36,24 @@ def bottomSide(points, height):
 def volumePrism(p1, p2, p3, height):
     points = [p1, p2, p3]
     pyramid_volume, points = topSide(points)
-    height = height - points[3][0]
+    height = abs(height - points[3][0])
     prism_volume = bottomSide(points, height)
     return pyramid_volume + prism_volume
 
 
 'Cálculo do volume total de um sólido'
-def volume(plyfile, max_val):
-    vertex, face = plyToList(plyfile)
-    print('max_val ', max_val)
+def volume(plyfile, depth=None):
+    if type(plyfile) == str:
+        vertex, face = plyToList(plyfile)
+    else:
+        vertex, face = reconstructSurface(plyfile)
+        depth = getMaxValAxis(plyfile)
+        print(depth)
     total_volume = 0
     for i in range(len(face)):
-        total_volume += volumePrism(vertex[face[i][0]], vertex[face[i][1]], vertex[face[i][2]], max_val)
+        total_volume += volumePrism(vertex[face[i][0]], vertex[face[i][1]], vertex[face[i][2]], depth)
     return total_volume
+
 
 'Relatório'
 def volumeCompare(cloud1, cloud2, average_val):

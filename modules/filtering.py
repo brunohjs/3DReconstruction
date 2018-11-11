@@ -52,7 +52,7 @@ def removeMinValPoints(point_cloud, min_val):
 
 
 'Remoção de outliers da nuvem de pontos'
-def removeOutliers(point_cloud, min_dist=20, min_val=5, angle=120):
+def removeOutliers(point_cloud, min_dist=15, min_val=1, angle=120):
     log("Removendo outliers da nuvem de pontos:")
     
     new_point_cloud = removeExtAnglePoints(point_cloud, angle)
@@ -69,7 +69,7 @@ def staticalOutlierFilter(point_cloud):
     pc = parseToPointCloud(point_cloud)
 
     pc = pc.make_statistical_outlier_filter()
-    pc.set_mean_k(50)
+    pc.set_mean_k(10)
     pc.set_std_dev_mul_thresh(1)
     pc = pc.filter()
     pc = pc.to_array()

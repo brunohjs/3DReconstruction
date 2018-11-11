@@ -32,8 +32,37 @@ def validadeFace(shape):
 def totalArea(vertex, faces):
     total_area = 0
     for face in faces:
-        total_area += areaTriangle([vertex[face[1]], vertex[face[2]], vertex[face[3]]])
+        total_area += areaTriangle([vertex[face[0]], vertex[face[1]], vertex[face[2]]])
     return total_area
+
+
+'Módulo de um vetor'
+def mod(v):
+    return (v[0]**2 + v[1]**2 + v[2]**2)**0.5
+
+
+'Cria um vetor a partir dos pontos p1 e p2'
+def vet(p1, p2):
+    return [p2[i] - p1[i] for i in range(3)]
+
+
+'Função que retorna a altura distância do vetor v1 sobre v2'
+def getHeight(v1, v2):
+    a = dot(v1, unit(v2))
+    v = [a*unit(v2)[i] for i in range(3)]
+    a = [v1[i] - v[i] for i in range(3)]
+    return mod(a)
+
+
+'Produto escalar entre os vetores'
+def dot(v1, v2):
+    return sum([v1[i]*v2[i] for i in range(3)])
+
+
+'Vetor unitário'
+def unit(v):
+    u = mod(v)
+    return [v[i]/u for i in range(3)]
 
 
 'Ponto médio entre dois pontos'
@@ -60,6 +89,7 @@ def getMaxValAxis(pcloud, axis='x'):
     return max_val
 
 
+'Organiza os pontos em ordem decrescente de proximidade do plano base (os mais próximos ao plano base, serão os últimos)'
 def getPointMaxValAxis(points, axis='x'):
     if axis == 'x':
         axis = 0
@@ -76,3 +106,11 @@ def getPointMaxValAxis(points, axis='x'):
                 points[i] = points[j]
                 points[j] = aux
     return points
+
+
+'Função para reposicionar uma nuvem de pontos'
+def translateCloud(cloud, move):
+    for i in range(len(cloud)):
+        for j in range(len(cloud[i])):
+            cloud[i][j] = cloud[i][j] + move[j]
+    return cloud

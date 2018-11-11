@@ -114,7 +114,7 @@ def saveSurface(vertex, face, path):
         wr = str(point[0])+" "+str(point[1])+" "+str(point[2])
         f.write(wr+'\n')
     for triangle in face:
-        wr = str(triangle[0])+" "+str(triangle[1])+" "+str(triangle[2])+" "+str(triangle[3])
+        wr = str(3)+" "+str(triangle[0])+" "+str(triangle[1])+" "+str(triangle[2])
         f.write(wr+'\n')
     f.close()
 

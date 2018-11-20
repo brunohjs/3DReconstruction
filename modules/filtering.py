@@ -30,6 +30,17 @@ def removeMinDistPoints(point_cloud, min_dist):
     return new_point_cloud
 
 
+'Filtro que remove pontos próximos ao robô'
+def removeMaxDistPoints(point_cloud, max_dist):
+    log(" - Removendo pontos próximos ao sensor.")
+
+    new_point_cloud = list()
+    for point in point_cloud:
+        if point['dist'] < max_dist:
+            new_point_cloud.append(point)
+    return new_point_cloud
+
+
 'Filtro que remove pontos com baixo valor de intensidade'
 def removeMinValPoints(point_cloud, min_val):
     log(" - Removendo pontos com baixo valor de intensidade")
@@ -52,11 +63,12 @@ def removeMinValPoints(point_cloud, min_val):
 
 
 'Remoção de outliers da nuvem de pontos'
-def removeOutliers(point_cloud, min_dist=20, min_val=5, angle=120):
+def removeOutliers(point_cloud, min_val=1.5, min_dist=15, max_dist=20, angle=120):
     log("Removendo outliers da nuvem de pontos:")
     
     new_point_cloud = removeExtAnglePoints(point_cloud, angle)
     new_point_cloud = removeMinDistPoints(new_point_cloud, min_dist)
+    new_point_cloud = removeMaxDistPoints(new_point_cloud, max_dist)
     new_point_cloud = removeMinValPoints(new_point_cloud, min_val)
 
     return new_point_cloud
@@ -69,7 +81,7 @@ def staticalOutlierFilter(point_cloud):
     pc = parseToPointCloud(point_cloud)
 
     pc = pc.make_statistical_outlier_filter()
-    pc.set_mean_k(50)
+    pc.set_mean_k(15)
     pc.set_std_dev_mul_thresh(1)
     pc = pc.filter()
     pc = pc.to_array()
@@ -102,19 +114,3 @@ def downsamplerFilter(point_cloud, space=1):
     pc = pc.to_array()
     
     return pc
-
-
-'Função para remover pontos próximos'
-def radialFilter(point_cloud, radius=0.9):
-    new_point_cloud = list()
-    list_index_to_discart = list()
-    for i in range(len(point_cloud)-1):
-        for j in range(i+1, len(point_cloud)):
-            d = distance(point_cloud[i], point_cloud[j])
-            if d < radius:
-                list_index_to_discart.append(i)
-                break
-    for i in range(len(point_cloud)):
-        if i not in list_index_to_discart:
-            new_point_cloud.append(point_cloud[i])
-    return new_point_cloud

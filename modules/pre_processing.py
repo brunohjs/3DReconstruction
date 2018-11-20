@@ -29,23 +29,27 @@ def getDataset(file):
 
 
 'Separar o dataset em imagens'
-def splitDataset(dataset):
+def splitDataset(dataset, image_size=180):
     log("Separando o dataset em imagens")
 
-    clockwise = False
+    if dataset[0]['angle'] < dataset[1]['angle']:
+        clockwise = False
+    else:
+        clockwise = True
     data = list()
     image = list()
     previous = dataset[0]['angle']
-    for line in dataset[1:]:
+    for line in dataset:
         cond_left = line['angle'] < previous and not clockwise
         cond_right = line['angle'] > previous and clockwise
         previous = line['angle']
-
         if cond_left or cond_right:
             clockwise = not clockwise
-            data.append(image)
+            if len(image) == image_size:
+                data.append(image)
             image = list()
         image.append(line)
+    data.append(image)
     return data
 
 
@@ -58,7 +62,7 @@ def ordenizeDataset(dataset):
 
 
 'Função que coleta o maior valor e a posição de um bin em um beam'
-def getHigherBin(dataset, range_bin):
+def getHigherBin(dataset, range_bin, image_size=179):
     log("Coletando os maiores bins dos beams")
 
     for image in dataset:
@@ -71,12 +75,40 @@ def getHigherBin(dataset, range_bin):
                     higher_index = beam['raw'].index(bin_)
             beam['higher'] = {
                 'value': higher, 
-                'dist' : (higher_index+1)*len(beam['raw'])/range_bin,
+                'dist' : (higher_index+1)/len(beam['raw'])*range_bin,
                 'index': higher_index
             }
-        if len(image) > 179:
+        if len(image) > image_size:
             image.remove(image[-1])
     return dataset
+
+
+def getHigherBins(dataset, range_bin=60, nbeams=10):
+    log("Coletando os maiores bins dos beams")
+
+    new_dataset = list()
+    for image in dataset:
+        new_dataset.append(list())
+        for beam in image:
+            highers = list()
+            for i, bin_ in enumerate(beam['raw']):
+                if len(highers) < nbeams:
+                    highers.append((bin_, i))
+                else:
+                    for j in range(len(highers)):
+                        if bin_ > highers[j][0]:
+                            highers[j] = (bin_, i)
+                            break
+            for i in range(len(highers)):
+                aux = dict()
+                aux['angle'] = beam['angle']
+                aux['z'] = beam['z']
+                aux['higher'] = dict()
+                aux['higher']['value'] = highers[i][0]
+                aux['higher']['dist'] = (highers[i][1]+1)/len(beam['raw'])*range_bin
+                aux['higher']['index'] = highers[i][1]
+                new_dataset[-1].append(aux)
+    return new_dataset
 
 
 'Refinar o dataset, removendo dados desnecessários e retorna uma nuvem de pontos'

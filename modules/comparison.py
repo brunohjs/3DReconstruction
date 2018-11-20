@@ -1,6 +1,9 @@
-from modules.helpers.parser import parseToPointCloud
-from modules.helpers.io import saveFile, log
+from modules.aux.parser import parseToPointCloud
+from modules.aux.geometry import getMaxValAxis
+from modules.aux.io import saveFile, log
 
+
+'Comparação entre duas nuvem de pontos e retorna a nuvem de pontos resultante'
 def comparison(cloud1, cloud2, resolution=2):
     log('Comparando modelos')
 

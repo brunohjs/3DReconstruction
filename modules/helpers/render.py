@@ -10,7 +10,7 @@ from glob import glob
 #comando pra executar o script no blender
 #blender --python ~/Desktop/3DReconstruction/modules/render.py outputs/wall2.ply
 
-position = mathutils.Vector((0,0,92))
+position = mathutils.Vector((0,0,0))
 objects = list()
 
 for i in range(3, len(sys.argv)):

@@ -89,6 +89,29 @@ def getMaxValAxis(pcloud, axis='x'):
     return max_val
 
 
+'Retorna o maior valor de um eixo na nuvem de pontos'
+def getMinValAxis(pcloud, axis='x'):
+    if axis == 'x':
+        axis = 0
+    elif axis == 'y':
+        axis = 1
+    elif axis == 'z':
+        axis = 2
+
+    min_val = float('inf')
+    for point in pcloud:
+        if point[axis] < min_val:
+            min_val = point[axis]
+    return min_val
+
+
+'Retorna o valor do ponto mais distante em um determinado eixo entre duas nuvem de pontos'
+def averageDepth(pcloud1, pcloud2, dist=5):
+    depth1 = getMaxValAxis(pcloud1)
+    depth2 = getMaxValAxis(pcloud2)
+    return max(depth1, depth2) + dist
+
+
 'Organiza os pontos em ordem decrescente de proximidade do plano base (os mais próximos ao plano base, serão os últimos)'
 def getPointMaxValAxis(points, axis='x'):
     if axis == 'x':
@@ -109,8 +132,24 @@ def getPointMaxValAxis(points, axis='x'):
 
 
 'Função para reposicionar uma nuvem de pontos'
-def translateCloud(cloud, move):
-    for i in range(len(cloud)):
-        for j in range(len(cloud[i])):
-            cloud[i][j] = cloud[i][j] + move[j]
-    return cloud
+def translateClouds(cloud1, cloud2, axis='x'):
+    move = [0, 0, 0]
+    if axis == 'x':
+        axis = 0
+    elif axis == 'y':
+        axis = 1
+    elif axis == 'z':
+        axis = 2
+    
+    min_val1 = getMinValAxis(cloud1, axis)
+    min_val2 = getMinValAxis(cloud2, axis)
+    move[axis] = abs(min_val2 - min_val1)
+    if min_val1 < min_val2:
+        for i in range(len(cloud1)):
+            for j in range(len(cloud1[i])):
+                cloud1[i][j] = cloud1[i][j] + move[j]
+    elif min_val2 < min_val1:
+        for i in range(len(cloud2)):
+            for j in range(len(cloud2[i])):
+                cloud2[i][j] = cloud2[i][j] + move[j]
+    return cloud1, cloud2

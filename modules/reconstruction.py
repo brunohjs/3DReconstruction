@@ -63,6 +63,7 @@ def generateVolume(pcloud, with_frontal=True, with_back=False):
     else:
         return back_surface+lateral_surface
 
+
 'Função principal do módulo'
 def reconstructSurface(pcloud):
     log("Reconstruindo a superfície")
@@ -71,7 +72,6 @@ def reconstructSurface(pcloud):
     face = Delaunay(pcloud_2d)
     vertex = [(p[0], p[1], p[2]) for p in pcloud]
     face = [(p[0], p[1], p[2]) for p in face.simplices]
-    
     vertex, face = separate(vertex, face)
 
     log(" - Área total da superfície: "+str(totalArea(vertex, face)))
@@ -133,7 +133,7 @@ def similarBackPoints(pcloud1, pcloud2):
 
 
 'Função que faz a separação da mesh em submeshs e escolhe a maior'
-def separate(vertex, faces, d_max=3):
+def separate(vertex, faces, d_max=2):
     new_faces = list()
     for face in faces:
         p1 = vertex[face[0]]

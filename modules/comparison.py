@@ -22,10 +22,3 @@ def comparison(cloud1, cloud2, resolution=2):
     cloud_result = cloud2.extract(index_vector_result)
 
     return cloud_result
-
-
-'Retorna o valor do ponto mais distante em um determinado eixo entre duas nuvem de pontos'
-def averageDepth(pcloud1, pcloud2, dist=5):
-    depth1 = getMaxValAxis(pcloud1)
-    depth2 = getMaxValAxis(pcloud2)
-    return max(depth1, depth2) + dist

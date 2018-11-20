@@ -11,7 +11,6 @@ def topSide(points):
     if points[1][0] == points[2][0]:
         points.append([points[1][0], points[0][1], points[0][2]])
         area = areaTriangle([points[0], points[3], points[1]])
-        #height = distance(points[3], points[2])
         height = getHeight(vet(points[3], points[2]), vet(points[3], points[1]))
     else:
         points.append([points[2][0], points[0][1], points[0][2]])
@@ -42,13 +41,10 @@ def volumePrism(p1, p2, p3, height):
 
 
 'Cálculo do volume total de um sólido'
-def volume(plyfile, depth=None):
-    if type(plyfile) == str:
-        vertex, face = plyToList(plyfile)
-    else:
-        vertex, face = reconstructSurface(plyfile)
-        depth = getMaxValAxis(plyfile)
-        print(depth)
+def volume(cloud, depth=None):
+    vertex, face = reconstructSurface(cloud)
+    if not depth:
+        depth = getMaxValAxis(cloud)
     total_volume = 0
     for i in range(len(face)):
         total_volume += volumePrism(vertex[face[i][0]], vertex[face[i][1]], vertex[face[i][2]], depth)
@@ -56,23 +52,25 @@ def volume(plyfile, depth=None):
 
 
 'Relatório'
-def volumeCompare(cloud1, cloud2, average_val):
-    volume1 = volume(cloud1 + '/surface.ply', average_val)
-    vertex, face = reconstructSurface(plyToCloud(cloud1 + '/surface.ply'))
+def volumeCompare(cloud1, cloud2, c1_pathname, c2_pathname):
+    average_val = averageDepth(cloud1, cloud2, 0)
+
+    volume1 = volume(cloud1, average_val)
+    vertex, face = reconstructSurface(cloud1)
     area1 = totalArea(vertex, face)
 
-    volume2 = volume(cloud2 + '/surface.ply', average_val)
-    vertex, face = reconstructSurface(plyToCloud(cloud2 + '/surface.ply'))
+    volume2 = volume(cloud2, average_val)
+    vertex, face = reconstructSurface(cloud2)
     area2 = totalArea(vertex, face) 
     
     print('_'*30)
     print('Resultado da comparação de volume:')
     print('_'*5)
-    print(cloud1)
+    print(c1_pathname)
     print('volume: ', volume1)
     print('área: ', area1)
     print('_'*5)
-    print(cloud2)
+    print(c2_pathname)
     print('volume: ', volume2)
     print('área: ', area2)
     print('_'*5)
